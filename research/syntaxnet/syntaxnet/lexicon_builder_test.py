@@ -23,7 +23,7 @@ import tensorflow as tf
 
 import syntaxnet.load_parser_ops
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from syntaxnet import sentence_pb2
 from syntaxnet import task_spec_pb2
@@ -101,7 +101,7 @@ class LexiconBuilderTest(tf.test.TestCase):
                  'char-ngram-map'):
       self.AddInput(name, os.path.join(test_flags.temp_dir(), name), '',
                     context)
-    logging.info('Writing context to: %s', self.context_file)
+    LOGGING.info('Writing context to: %s', self.context_file)
     with open(self.context_file, 'w') as f:
       f.write(str(context))
 
@@ -118,17 +118,17 @@ class LexiconBuilderTest(tf.test.TestCase):
     doc_source = gen_parser_ops.document_source(
         task_context=self.context_file, batch_size=1)
     with self.test_session() as sess:
-      logging.info('Reading document1')
+      LOGGING.info('Reading document1')
       doc, last = self.ReadNextDocument(sess, doc_source)
       self.assertEqual(len(doc.token), 12)
       self.assertEqual(u'लाजमी', doc.token[9].word)
       self.assertFalse(last)
-      logging.info('Reading document2')
+      LOGGING.info('Reading document2')
       doc, last = self.ReadNextDocument(sess, doc_source)
       self.assertEqual(len(doc.token), 13)
       self.assertEqual(u'भंग', doc.token[9].word)
       self.assertFalse(last)
-      logging.info('Hitting end of the dataset')
+      LOGGING.info('Hitting end of the dataset')
       doc, last = self.ReadNextDocument(sess, doc_source)
       self.assertTrue(doc is None)
       self.assertTrue(last)
@@ -175,7 +175,7 @@ class LexiconBuilderTest(tf.test.TestCase):
 
   def testCoNLLFormat(self):
     self.WriteContext('conll-sentence')
-    logging.info('Writing conll file to: %s', self.corpus_file)
+    LOGGING.info('Writing conll file to: %s', self.corpus_file)
     with open(self.corpus_file, 'w') as f:
       f.write((CONLL_DOC1 + u'\n\n' + CONLL_DOC2 + u'\n')
               .replace(' ', '\t').encode('utf-8'))

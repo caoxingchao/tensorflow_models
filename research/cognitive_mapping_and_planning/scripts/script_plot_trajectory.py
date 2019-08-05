@@ -63,7 +63,7 @@ def _load_trajectory():
   config_name = FLAGS.config_name+_get_suffix_str()
 
   dir_name = os.path.join(base_dir, FLAGS.type, config_name)
-  logging.info('Waiting for snapshot in directory %s.', dir_name)
+  LOGGING.info('Waiting for snapshot in directory %s.', dir_name)
   last_checkpoint = slim.evaluation.wait_for_new_checkpoint(dir_name, None)
   checkpoint_iter = int(os.path.basename(last_checkpoint).split('-')[1])
 

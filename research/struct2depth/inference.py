@@ -162,15 +162,15 @@ def _run_inference(output_dir=None,
     saver.restore(sess, model_ckpt)
     if not gfile.Exists(output_dir):
       gfile.MakeDirs(output_dir)
-    logging.info('Predictions will be saved in %s.', output_dir)
+    LOGGING.info('Predictions will be saved in %s.', output_dir)
 
     # Collect all images to run inference on.
     im_files, basepath_in = collect_input_images(input_dir, input_list_file,
                                                  file_extension)
     if shuffle:
-      logging.info('Shuffling data...')
+      LOGGING.info('Shuffling data...')
       np.random.shuffle(im_files)
-    logging.info('Running inference on %d files.', len(im_files))
+    LOGGING.info('Running inference on %d files.', len(im_files))
 
     # Create missing output folders and pre-compute target directories.
     output_dirs = create_output_dirs(im_files, basepath_in, output_dir)
@@ -180,7 +180,7 @@ def _run_inference(output_dir=None,
       im_batch = []
       for i in range(len(im_files)):
         if i % 100 == 0:
-          logging.info('%s of %s files processed.', i, len(im_files))
+          LOGGING.info('%s of %s files processed.', i, len(im_files))
 
         # Read image and run inference.
         if inference_mode == INFERENCE_MODE_SINGLE:
@@ -244,7 +244,7 @@ def _run_inference(output_dir=None,
             if current_output_handle is not None:
               current_output_handle.close()
             current_sequence_dir = sequence_dir
-            logging.info('Writing egomotion sequence to %s.', output_filepath)
+            LOGGING.info('Writing egomotion sequence to %s.', output_filepath)
             current_output_handle = gfile.Open(output_filepath, 'w')
             input_image_seq = []
           im = util.load_image(im_files[i], resize=(img_width, img_height))
@@ -315,7 +315,7 @@ def _run_inference(output_dir=None,
             current_output_handle.write(str(i) + ' ' + egomotion_1_2 + ' ' +
                                         egomotion_2_3 + '\n')
           written_before.append(output_filepath)
-      logging.info('Done.')
+      LOGGING.info('Done.')
 
 
 def mask_image_stack(input_image_stack, input_seg_seq):

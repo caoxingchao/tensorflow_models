@@ -22,7 +22,7 @@ import tensorflow as tf
 
 import syntaxnet.load_parser_ops
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from syntaxnet import sentence_pb2
 from syntaxnet import task_spec_pb2
@@ -55,7 +55,7 @@ class TextFormatsTest(tf.test.TestCase):
                  'tag-to-category'):
       self.AddInput(name, os.path.join(test_flags.temp_dir(), name), '',
                     context)
-    logging.info('Writing context to: %s', self.context_file)
+    LOGGING.info('Writing context to: %s', self.context_file)
     with open(self.context_file, 'w') as f:
       f.write(str(context))
 
@@ -70,7 +70,7 @@ class TextFormatsTest(tf.test.TestCase):
 
   def CheckTokenization(self, sentence, tokenization):
     self.WriteContext('english-text')
-    logging.info('Writing text file to: %s', self.corpus_file)
+    LOGGING.info('Writing text file to: %s', self.corpus_file)
     with open(self.corpus_file, 'w') as f:
       f.write(sentence)
     sentence, _ = gen_parser_ops.document_source(
@@ -82,7 +82,7 @@ class TextFormatsTest(tf.test.TestCase):
 
   def CheckUntokenizedDoc(self, sentence, words, starts, ends):
     self.WriteContext('untokenized-text')
-    logging.info('Writing text file to: %s', self.corpus_file)
+    LOGGING.info('Writing text file to: %s', self.corpus_file)
     with open(self.corpus_file, 'w') as f:
       f.write(sentence)
     sentence, _ = gen_parser_ops.document_source(

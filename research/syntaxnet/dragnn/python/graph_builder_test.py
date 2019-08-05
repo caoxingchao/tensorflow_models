@@ -33,7 +33,7 @@ from syntaxnet import test_flags
 
 from tensorflow.python.framework import test_util
 from tensorflow.python.platform import googletest
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 
 _DUMMY_GOLD_SENTENCE = """
@@ -267,11 +267,11 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
       target.name = 'testTraining-all'
       train = builder.add_training_from_config(target)
       with self.test_session() as sess:
-        logging.info('Initializing')
+        LOGGING.info('Initializing')
         sess.run(tf.global_variables_initializer())
 
         # Run one iteration of training and verify nothing crashes.
-        logging.info('Training')
+        LOGGING.info('Training')
         sess.run(train['run'], feed_dict={train['input_batch']: reader_strings})
 
   def testTraining(self):
@@ -382,10 +382,10 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
       config = tf.ConfigProto(
           intra_op_parallelism_threads=0, inter_op_parallelism_threads=0)
       with self.test_session(config=config) as sess:
-        logging.info('Initializing')
+        LOGGING.info('Initializing')
         sess.run(tf.global_variables_initializer())
 
-        logging.info('Dry run oracle trace...')
+        LOGGING.info('Dry run oracle trace...')
         traces = sess.run(
             oracle_trace['traces'],
             feed_dict={oracle_trace['input_batch']: gold_reader_strings})
@@ -397,7 +397,7 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
           self.assertTrue(master_trace.component_trace)
           self.assertTrue(master_trace.component_trace[0].step_trace)
 
-        logging.info('Simulating training...')
+        LOGGING.info('Simulating training...')
         break_iter = 400
         is_resolved = False
         for i in range(0,
@@ -405,12 +405,12 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
           cost, eval_res_val = sess.run(
               [train['cost'], train['metrics']],
               feed_dict={train['input_batch']: gold_reader_strings})
-          logging.info('cost = %s', cost)
+          LOGGING.info('cost = %s', cost)
           self.assertFalse(np.isnan(cost))
           total_val = eval_res_val.reshape((-1, 2))[:, 0].sum()
           correct_val = eval_res_val.reshape((-1, 2))[:, 1].sum()
           if correct_val == total_val and not is_resolved:
-            logging.info('... converged on iteration %d with (correct, total) '
+            LOGGING.info('... converged on iteration %d with (correct, total) '
                          '= (%d, %d)', i, correct_val, total_val)
             is_resolved = True
             # Run for slightly longer than convergence to help with quantized
@@ -426,7 +426,7 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
         if (correct_val != total_val or correct_val != expected_num_actions or
             total_val != expected_num_actions):
           for c in xrange(len(master_spec.component)):
-            logging.error('component %s:\nname=%s\ntotal=%s\ncorrect=%s', c,
+            LOGGING.error('component %s:\nname=%s\ntotal=%s\ncorrect=%s', c,
                           master_spec.component[c].name, eval_res_val[2 * c],
                           eval_res_val[2 * c + 1])
 
@@ -438,12 +438,12 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
 
         builder.saver.save(sess, os.path.join(test_flags.temp_dir(), 'model'))
 
-        logging.info('Running test.')
-        logging.info('Printing annotations')
+        LOGGING.info('Running test.')
+        LOGGING.info('Printing annotations')
         annotations = sess.run(
             anno['annotations'],
             feed_dict={anno['input_batch']: test_reader_strings})
-        logging.info('Put %d inputs in, got %d annotations out.',
+        LOGGING.info('Put %d inputs in, got %d annotations out.',
                      len(test_reader_strings), len(annotations))
 
         # Also run the annotation graph with tracing enabled.
@@ -605,7 +605,7 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
     for target in reversed(expected_op_order):
       path = _find_input_path_to_type(endpoint, target)
       self.assertNotEmpty(path)
-      logging.info('path[%d] from %s to %s: %s',
+      LOGGING.info('path[%d] from %s to %s: %s',
                    len(path), name, target, [_as_op(x).type for x in path])
       endpoint = path[-1]
 

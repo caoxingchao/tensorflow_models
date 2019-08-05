@@ -163,11 +163,11 @@ class LMAgent(object):
 
     self.a2c = config.ema_baseline_decay == 0
     if not self.a2c:
-      logging.info('Using exponential moving average REINFORCE baselines.')
+      LOGGING.info('Using exponential moving average REINFORCE baselines.')
       self.ema_baseline_decay = config.ema_baseline_decay
       self.ema_by_len = [0.0] * global_config.timestep_limit
     else:
-      logging.info('Using advantage (a2c) with learned value function.')
+      LOGGING.info('Using advantage (a2c) with learned value function.')
       self.ema_baseline_decay = 0.0
       self.ema_by_len = None
 
@@ -179,12 +179,12 @@ class LMAgent(object):
         raise ValueError('topk_batch_size must be a positive integer. Got %s',
                          self.topk_batch_size)
       self.top_episodes = utils.MaxUniquePriorityQueue(config.topk)
-      logging.info('Made max-priorty-queue with capacity %d',
+      LOGGING.info('Made max-priorty-queue with capacity %d',
                    self.top_episodes.capacity)
     else:
       self.top_episodes = None
       self.topk_loss_hparam = 0.0
-      logging.info('No max-priorty-queue')
+      LOGGING.info('No max-priorty-queue')
 
     # Experience replay.
     self.replay_temperature = config.replay_temperature
@@ -193,17 +193,17 @@ class LMAgent(object):
         global_config.batch_size - self.num_replay_per_batch)
     self.replay_alpha = (
         self.num_replay_per_batch / float(global_config.batch_size))
-    logging.info('num_replay_per_batch: %d', self.num_replay_per_batch)
-    logging.info('num_on_policy_per_batch: %d', self.num_on_policy_per_batch)
-    logging.info('replay_alpha: %s', self.replay_alpha)
+    LOGGING.info('num_replay_per_batch: %d', self.num_replay_per_batch)
+    LOGGING.info('num_on_policy_per_batch: %d', self.num_on_policy_per_batch)
+    LOGGING.info('replay_alpha: %s', self.replay_alpha)
     if self.num_replay_per_batch > 0:
       # Train with off-policy episodes from replay buffer.
       start_time = time.time()
       self.experience_replay = utils.RouletteWheel(
           unique_mode=True, save_file=experience_replay_file)
-      logging.info('Took %s sec to load replay buffer from disk.',
+      LOGGING.info('Took %s sec to load replay buffer from disk.',
                    int(time.time() - start_time))
-      logging.info('Replay buffer file location: "%s"',
+      LOGGING.info('Replay buffer file location: "%s"',
                    self.experience_replay.save_file)
     else:
       # Only train on-policy.
@@ -220,7 +220,7 @@ class LMAgent(object):
     # RL policy and value networks #
     ################################
     batch_size = global_config.batch_size
-    logging.info('batch_size: %d', batch_size)
+    LOGGING.info('batch_size: %d', batch_size)
 
     self.policy_cell = LinearWrapper(
         tf.contrib.rnn.MultiRNNCell(
@@ -480,7 +480,7 @@ class LMAgent(object):
           tf.reduce_sum(topk_loss_per_step, axis=1), axis=0)
       assert len(topk_loss.shape) == 0  # pylint: disable=g-explicit-length-test
       self.topk_loss = topk_loss * self.offp_switch
-      logging.info('Including off policy loss.')
+      LOGGING.info('Including off policy loss.')
     else:
       self.topk_loss = topk_loss = 0.0
 
@@ -507,13 +507,13 @@ class LMAgent(object):
     self.params = params
 
     if config.regularizer:
-      logging.info('Adding L2 regularizer with scale %.2f.',
+      LOGGING.info('Adding L2 regularizer with scale %.2f.',
                    config.regularizer)
       self.regularizer = config.regularizer * sum(
           tf.nn.l2_loss(w) for w in non_embedding_params)
       self.loss += self.regularizer
     else:
-      logging.info('Skipping regularizer.')
+      LOGGING.info('Skipping regularizer.')
       self.regularizer = 0.0
 
     # Only build gradients graph for local model.
@@ -635,7 +635,7 @@ class LMAgent(object):
         % (tot_r, num_steps, reason, input_case, code_output, code))
     text_summary = session.run(self.rl_text_summary_op,
                                {self.text_summary_placeholder: text})
-    logging.info(
+    LOGGING.info(
         'Step %d.\t NPE: %d\t Reason: %s.\t Tot R: %.2f.\t Length: %d. '
         '\tInput: %s \tOutput: %s \tProgram: %s',
         step, npe, reason, tot_r, num_steps, input_case,
@@ -769,7 +769,7 @@ class LMAgent(object):
             self.sampled_batch.episode_lengths])
       if episode_lengths.size == 0:
         # This should not happen.
-        logging.warn(
+        LOGGING.warn(
             'Shapes:\n'
             'batch_actions.shape: %s\n'
             'batch_values.shape: %s\n'
@@ -839,7 +839,7 @@ class LMAgent(object):
            self.sampled_batch.episode_lengths, self.sampled_batch.log_probs])
       if episode_lengths.size == 0:
         # This should not happen.
-        logging.warn(
+        LOGGING.warn(
             'Shapes:\n'
             'batch_actions.shape: %s\n'
             'batch_values.shape: %s\n'
@@ -1111,7 +1111,7 @@ class LMAgent(object):
       if max_tot_r >= self.top_reward:
         if max_tot_r >= self.top_reward:
           self.top_reward = max_tot_r
-        logging.info('Top code: r=%.2f, \t%s', max_tot_r, code_strings[max_i])
+        LOGGING.info('Top code: r=%.2f, \t%s', max_tot_r, code_strings[max_i])
       if self.top_episodes is not None:
         self.top_episodes.push(
             max_tot_r, tuple(batch_actions[max_i, :episode_lengths[max_i]]))

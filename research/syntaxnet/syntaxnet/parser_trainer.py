@@ -25,7 +25,7 @@ from absl import flags
 import tensorflow as tf
 
 from tensorflow.python.platform import gfile
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from google.protobuf import text_format
 
@@ -129,7 +129,7 @@ def Eval(sess, parser, num_steps, best_eval_metric):
   Returns:
     new best eval metric
   """
-  logging.info('Evaluating training network.')
+  LOGGING.info('Evaluating training network.')
   t = time.time()
   num_epochs = None
   num_tokens = 0
@@ -145,13 +145,13 @@ def Eval(sess, parser, num_steps, best_eval_metric):
     elif num_epochs < tf_eval_epochs:
       break
   eval_metric = 0 if num_tokens == 0 else (100.0 * num_correct / num_tokens)
-  logging.info('Seconds elapsed in evaluation: %.2f, '
+  LOGGING.info('Seconds elapsed in evaluation: %.2f, '
                'eval metric: %.2f%%', time.time() - t, eval_metric)
   WriteStatus(num_steps, eval_metric, max(eval_metric, best_eval_metric))
 
   # Save parameters.
   if FLAGS.output_path:
-    logging.info('Writing out trained parameters.')
+    LOGGING.info('Writing out trained parameters.')
     parser.saver.save(sess, OutputPath('latest-model'))
     if eval_metric > best_eval_metric:
       parser.saver.save(sess, OutputPath('model'))
@@ -171,7 +171,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
   """
   t = time.time()
   hidden_layer_sizes = map(int, FLAGS.hidden_layer_sizes.split(','))
-  logging.info('Building training network with parameters: feature_sizes: %s '
+  LOGGING.info('Building training network with parameters: feature_sizes: %s '
                'domain_sizes: %s', feature_sizes, domain_sizes)
 
   if FLAGS.graph_builder == 'greedy':
@@ -220,7 +220,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
     with gfile.FastGFile(OutputPath('graph'), 'w') as f:
       f.write(sess.graph_def.SerializeToString())
 
-  logging.info('Initializing...')
+  LOGGING.info('Initializing...')
   num_epochs = 0
   cost_sum = 0.0
   num_steps = 0
@@ -228,17 +228,17 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
   sess.run(parser.inits.values())
 
   if FLAGS.pretrained_params is not None:
-    logging.info('Loading pretrained params from %s', FLAGS.pretrained_params)
+    LOGGING.info('Loading pretrained params from %s', FLAGS.pretrained_params)
     feed_dict = {'save/Const:0': FLAGS.pretrained_params}
     targets = []
     for node in sess.graph_def.node:
       if (node.name.startswith('save/Assign') and
           node.input[0] in FLAGS.pretrained_params_names.split(',')):
-        logging.info('Loading %s with op %s', node.input[0], node.name)
+        LOGGING.info('Loading %s with op %s', node.input[0], node.name)
         targets.append(node.name)
     sess.run(targets, feed_dict=feed_dict)
 
-  logging.info('Training...')
+  LOGGING.info('Training...')
   while num_epochs < FLAGS.num_epochs:
     tf_epochs, tf_cost, _ = sess.run([parser.training[
         'epochs'], parser.training['cost'], parser.training['train_op']])
@@ -246,7 +246,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
     num_steps += 1
     cost_sum += tf_cost
     if num_steps % FLAGS.report_every == 0:
-      logging.info('Epochs: %d, num steps: %d, '
+      LOGGING.info('Epochs: %d, num steps: %d, '
                    'seconds elapsed: %.2f, avg cost: %.2f, ', num_epochs,
                    num_steps, time.time() - t, cost_sum / FLAGS.report_every)
       cost_sum = 0.0
@@ -255,7 +255,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
 
 
 def main(unused_argv):
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   if not gfile.IsDirectory(OutputPath('')):
     gfile.MakeDirs(OutputPath(''))
 
@@ -264,7 +264,7 @@ def main(unused_argv):
 
   # Creates necessary term maps.
   if FLAGS.compute_lexicon:
-    logging.info('Computing lexicon...')
+    LOGGING.info('Computing lexicon...')
     with tf.Session(FLAGS.tf_master) as sess:
       gen_parser_ops.lexicon_builder(task_context=OutputPath('context'),
                                      corpus_name=FLAGS.training_corpus).run()
@@ -275,7 +275,7 @@ def main(unused_argv):
 
   # Well formed and projectivize.
   if FLAGS.projectivize_training_set:
-    logging.info('Preprocessing...')
+    LOGGING.info('Preprocessing...')
     with tf.Session(FLAGS.tf_master) as sess:
       source, last = gen_parser_ops.document_source(
           task_context=OutputPath('context'),
@@ -294,7 +294,7 @@ def main(unused_argv):
         if tf_last:
           break
 
-  logging.info('Training...')
+  LOGGING.info('Training...')
   with tf.Session(FLAGS.tf_master) as sess:
     Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims)
 

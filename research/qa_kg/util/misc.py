@@ -22,13 +22,13 @@ import tensorflow.contrib.slim as slim
 
 
 def prepare_dirs_and_logger(config):
-  formatter = logging.Formatter('%(asctime)s:%(levelname)s::%(message)s')
-  logger = logging.getLogger('tensorflow')
+  formatter = LOGGING.Formatter('%(asctime)s:%(levelname)s::%(message)s')
+  logger = LOGGING.getLogger('tensorflow')
 
   for hdlr in logger.handlers:
     logger.removeHandler(hdlr)
 
-  handler = logging.StreamHandler()
+  handler = LOGGING.StreamHandler()
   handler.setFormatter(formatter)
 
   logger.addHandler(handler)

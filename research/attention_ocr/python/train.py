@@ -155,15 +155,15 @@ def train(loss, init_fn, hparams):
 
 def prepare_training_dir():
   if not tf.gfile.Exists(FLAGS.train_log_dir):
-    logging.info('Create a new training directory %s', FLAGS.train_log_dir)
+    LOGGING.info('Create a new training directory %s', FLAGS.train_log_dir)
     tf.gfile.MakeDirs(FLAGS.train_log_dir)
   else:
     if FLAGS.reset_train_dir:
-      logging.info('Reset the training directory %s', FLAGS.train_log_dir)
+      LOGGING.info('Reset the training directory %s', FLAGS.train_log_dir)
       tf.gfile.DeleteRecursively(FLAGS.train_log_dir)
       tf.gfile.MakeDirs(FLAGS.train_log_dir)
     else:
-      logging.info('Use already existing training directory %s',
+      LOGGING.info('Use already existing training directory %s',
                    FLAGS.train_log_dir)
 
 
@@ -200,7 +200,7 @@ def main(_):
     init_fn = model.create_init_fn_to_restore(FLAGS.checkpoint,
                                               FLAGS.checkpoint_inception)
     if FLAGS.show_graph_stats:
-      logging.info('Total number of weights in the graph: %s',
+      LOGGING.info('Total number of weights in the graph: %s',
                    calculate_graph_metrics())
     train(total_loss, init_fn, hparams)
 

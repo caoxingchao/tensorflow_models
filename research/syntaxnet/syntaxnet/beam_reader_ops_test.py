@@ -20,7 +20,7 @@ import os.path
 import time
 import tensorflow as tf
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from syntaxnet import structured_graph_builder
 from syntaxnet import test_flags
@@ -56,7 +56,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
     """Constructs a structured learning graph."""
     assert max_steps > 0, 'Empty network not supported.'
 
-    logging.info('MakeGraph + %s', kwargs)
+    LOGGING.info('MakeGraph + %s', kwargs)
 
     with self.test_session(graph=tf.Graph()) as sess:
       feature_sizes, domain_sizes, embedding_dims, num_actions = sess.run(
@@ -100,8 +100,8 @@ class ParsingReaderOpsTest(tf.test.TestCase):
           self.MakeGraph(
               max_steps=max_steps, beam_size=beam_size,
               batch_size=batch_size, **kwargs))
-      logging.info('params: %s', builder.params.keys())
-      logging.info('variables: %s', builder.variables.keys())
+      LOGGING.info('params: %s', builder.params.keys())
+      LOGGING.info('variables: %s', builder.variables.keys())
 
       t = builder.training
       sess.run(t['inits'])
@@ -113,7 +113,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
       for step in range(10):
         if step > 0 and step % every_n == 0:
           new_walltime = time.time()
-          logging.info(
+          LOGGING.info(
               'Step: %d <cost>: %f <gold_slot>: %f <alive_steps>: %f <iter '
               'time>: %f ms',
               step, sum(costs[-every_n:]) / float(every_n),
@@ -149,7 +149,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
         gold_slots.append(gold_slot.mean())
         alive_stepss.append(alive_steps.mean())
 
-      logging.info(
+      LOGGING.info(
           'Pseudo eval: <cost>: %f <gold_slot>: %f <alive_steps>: %f',
           sum(costs[-every_n:]) / float(every_n),
           sum(gold_slots[-every_n:]) / float(every_n),
@@ -163,18 +163,18 @@ class ParsingReaderOpsTest(tf.test.TestCase):
       all_path_scores = []
       beam_path_scores = []
       for i in range(iterations):
-        logging.info('run %d', i)
+        LOGGING.info('run %d', i)
         tensors = (
             sess.run(
                 [t['alive_steps'], t['concat_scores'],
                  t['all_path_scores'], t['beam_path_scores'],
                  t['indices'], t['path_ids']]))
 
-        logging.info('alive for %s, all_path_scores and beam_path_scores, '
+        LOGGING.info('alive for %s, all_path_scores and beam_path_scores, '
                      'indices and path_ids:'
                      '\n%s\n%s\n%s\n%s',
                      tensors[0], tensors[2], tensors[3], tensors[4], tensors[5])
-        logging.info('diff:\n%s', tensors[2] - tensors[3])
+        LOGGING.info('diff:\n%s', tensors[2] - tensors[3])
 
         all_path_scores.append(tensors[2])
         beam_path_scores.append(tensors[3])
@@ -186,7 +186,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
       t = self.MakeGraph(batch_size=3, beam_size=2, max_steps=5).training
       sess.run(t['inits'])
       for i in range(5):
-        logging.info('run %d', i)
+        LOGGING.info('run %d', i)
         tf_alive = t['alive'].eval()
         self.assertFalse(any(tf_alive))
 

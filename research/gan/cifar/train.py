@@ -185,6 +185,6 @@ def _optimizer(gen_lr, dis_lr, use_sync_replicas):
 
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   tf.app.run()
 

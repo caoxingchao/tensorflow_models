@@ -156,7 +156,7 @@ def main(_):
     tf.gfile.MakeDirs(FLAGS.train_root_dir)
 
   config = _make_config_from_flags()
-  logging.info('\n'.join(['{}={}'.format(k, v) for k, v in config.iteritems()]))
+  LOGGING.info('\n'.join(['{}={}'.format(k, v) for k, v in config.iteritems()]))
 
   for stage_id in train.get_stage_ids(**config):
     batch_size = train.get_batch_size(stage_id, **config)

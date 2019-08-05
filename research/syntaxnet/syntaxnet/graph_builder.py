@@ -21,7 +21,7 @@ import syntaxnet.load_parser_ops
 
 from tensorflow.python.ops import control_flow_ops as cf
 from tensorflow.python.ops import state_ops
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 from tensorflow.python.training import saver as tf_saver
 
 from syntaxnet.ops import gen_parser_ops
@@ -244,7 +244,7 @@ class GreedyParser(object):
         if initializer is not None:
           self.inits[name] = state_ops.init_variable(param, initializer)
         if self._averaging_decay == 1:
-          logging.info('Using vanilla averaging of parameters.')
+          LOGGING.info('Using vanilla averaging of parameters.')
           ema = tf.train.ExponentialMovingAverage(decay=(step / (step + 1.0)),
                                                   num_updates=None)
         else:

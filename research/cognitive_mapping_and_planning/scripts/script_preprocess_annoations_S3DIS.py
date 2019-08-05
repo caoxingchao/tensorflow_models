@@ -23,7 +23,7 @@ from datasets import factory
 from src import utils 
 from src import map_utils as mu
 
-logging.basicConfig(level=logging.INFO)
+LOGGING.basicConfig(level=LOGGING.INFO)
 DATA_DIR = 'data/stanford_building_parser_dataset_raw/'
 
 mkdir_if_missing = utils.mkdir_if_missing
@@ -85,7 +85,7 @@ def _write_map_files(b_in, b_out, transform):
   for flip in [False, True]:
     b = nav_env.Building(b_out, robot, env, flip=flip,
                          building_loader=building_loader)
-    logging.info("building_in: %s, building_out: %s, transform: %d", b_in,
+    LOGGING.info("building_in: %s, building_out: %s, transform: %d", b_in,
                  b_out, transform)
     maps = _get_semantic_maps(b_in, transform, b.map, flip, cats)
     maps = np.transpose(np.array(maps), axes=[1,2,0])
@@ -96,7 +96,7 @@ def _write_map_files(b_in, b_out, transform):
                                  b.map.origin[0], b.map.origin[1],
                                  b.map.resolution, flip)
     out_file = os.path.join(DATA_DIR, 'processing', 'class-maps', file_name)
-    logging.info('Writing semantic maps to %s.', out_file)
+    LOGGING.info('Writing semantic maps to %s.', out_file)
     save_variables(out_file, [maps, cats], ['maps', 'cats'], overwrite=True)
 
 def _transform_area5b(room_dimension):
@@ -117,7 +117,7 @@ def collect_room(building_name, room_name):
   vertexs = []; colors = [];
   for f in files:
     file_name = os.path.join(room_dir, f)
-    logging.info('  %s', file_name)
+    LOGGING.info('  %s', file_name)
     a = np.loadtxt(file_name)
     vertex = a[:,:3]*1.
     color = a[:,3:]*1

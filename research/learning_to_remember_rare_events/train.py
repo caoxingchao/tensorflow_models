@@ -149,15 +149,15 @@ class Trainer(object):
 
     train_size = len(train_data)
     valid_size = len(valid_data)
-    logging.info('train_size (number of labels) %d', train_size)
-    logging.info('valid_size (number of labels) %d', valid_size)
-    logging.info('input_dim %d', input_dim)
-    logging.info('output_dim %d', output_dim)
-    logging.info('rep_dim %d', rep_dim)
-    logging.info('episode_length %d', episode_length)
-    logging.info('episode_width %d', episode_width)
-    logging.info('memory_size %d', memory_size)
-    logging.info('batch_size %d', batch_size)
+    LOGGING.info('train_size (number of labels) %d', train_size)
+    LOGGING.info('valid_size (number of labels) %d', valid_size)
+    LOGGING.info('input_dim %d', input_dim)
+    LOGGING.info('output_dim %d', output_dim)
+    LOGGING.info('rep_dim %d', rep_dim)
+    LOGGING.info('episode_length %d', episode_length)
+    LOGGING.info('episode_width %d', episode_width)
+    LOGGING.info('memory_size %d', memory_size)
+    LOGGING.info('batch_size %d', batch_size)
 
     assert all(len(v) >= float(episode_length) / episode_width
                for v in train_data.values())
@@ -176,10 +176,10 @@ class Trainer(object):
     if FLAGS.save_dir:
       ckpt = tf.train.get_checkpoint_state(FLAGS.save_dir)
     if ckpt and ckpt.model_checkpoint_path:
-      logging.info('restoring from %s', ckpt.model_checkpoint_path)
+      LOGGING.info('restoring from %s', ckpt.model_checkpoint_path)
       saver.restore(sess, ckpt.model_checkpoint_path)
 
-    logging.info('starting now')
+    LOGGING.info('starting now')
     losses = []
     random.seed(FLAGS.seed)
     np.random.seed(FLAGS.seed)
@@ -191,7 +191,7 @@ class Trainer(object):
       losses.append(loss)
 
       if i % FLAGS.validation_frequency == 0:
-        logging.info('episode batch %d, avg train loss %f',
+        LOGGING.info('episode batch %d, avg train loss %f',
                      i, np.mean(losses))
         losses = []
 
@@ -219,8 +219,8 @@ class Trainer(object):
                 self.individual_compute_correct(yyy, yyy_preds))
             seen_counts[yyy % episode_width] = count + 1
 
-        logging.info('validation overall accuracy %f', np.mean(correct))
-        logging.info('%d-shot: %.3f, ' * num_shots,
+        LOGGING.info('validation overall accuracy %f', np.mean(correct))
+        LOGGING.info('%d-shot: %.3f, ' * num_shots,
                      *sum([[k, np.mean(correct_by_shot[k])]
                            for k in xrange(num_shots)], []))
 
@@ -228,7 +228,7 @@ class Trainer(object):
           saved_file = saver.save(sess,
                                   os.path.join(FLAGS.save_dir, 'model.ckpt'),
                                   global_step=self.model.global_step)
-          logging.info('saved model to %s', saved_file)
+          LOGGING.info('saved model to %s', saved_file)
 
 
 def main(unused_argv):
@@ -238,5 +238,5 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.INFO)
+  LOGGING.basicConfig(level=LOGGING.INFO)
   tf.app.run()

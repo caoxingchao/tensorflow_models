@@ -144,7 +144,7 @@ def run_bert_pretrain(strategy):
     raise ValueError('Distribution strategy is not specified.')
 
   # Runs customized training loop.
-  logging.info('Training using customized training loop TF 2.0 with distrubuted'
+  LOGGING.info('Training using customized training loop TF 2.0 with distrubuted'
                'strategy.')
 
   use_remote_tpu = (FLAGS.strategy_type == 'tpu' and FLAGS.tpu)

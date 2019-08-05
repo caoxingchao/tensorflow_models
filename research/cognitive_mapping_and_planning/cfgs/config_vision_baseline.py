@@ -78,7 +78,7 @@ def get_arch_vars(arch_str):
   for k, v in zip(ks, vals):
     setattr(vars, k, v)
   
-  logging.error('arch_vars: %s', vars)
+  LOGGING.error('arch_vars: %s', vars)
   return vars
 
 def process_arch_str(args, arch_str):
@@ -95,7 +95,7 @@ def process_arch_str(args, arch_str):
   elif args.navtask.camera_param.modalities[0] == 'depth':
     args.solver.pretrained_path = d_resnet_v2_50_path
   else:
-    logging.fatal('Neither of rgb or d')
+    LOGGING.fatal('Neither of rgb or d')
 
   if arch_vars.dropout == 'DO': 
     args.arch.fc_dropout = 0.5
@@ -136,11 +136,11 @@ def process_arch_str(args, arch_str):
     args.arch.pred_neurons = [256] # The other is inside the LSTM.
   
   else:
-    logging.fatal('exp_ver: %s undefined', exp_ver)
+    LOGGING.fatal('exp_ver: %s undefined', exp_ver)
     assert(False)
 
   # Log the arguments
-  logging.error('%s', args)
+  LOGGING.error('%s', args)
   return args
 
 def get_args_for_config(config_name):
@@ -150,11 +150,11 @@ def get_args_for_config(config_name):
 
   exp_name, mode_str = config_name.split('+')
   arch_str, solver_str, navtask_str = exp_name.split('.')
-  logging.error('config_name: %s', config_name)
-  logging.error('arch_str: %s', arch_str)
-  logging.error('navtask_str: %s', navtask_str)
-  logging.error('solver_str: %s', solver_str)
-  logging.error('mode_str: %s', mode_str)
+  LOGGING.error('config_name: %s', config_name)
+  LOGGING.error('arch_str: %s', arch_str)
+  LOGGING.error('navtask_str: %s', navtask_str)
+  LOGGING.error('solver_str: %s', solver_str)
+  LOGGING.error('mode_str: %s', mode_str)
 
   args.solver = cc.process_solver_str(solver_str)
   args.navtask = cc.process_navtask_str(navtask_str)
@@ -169,5 +169,5 @@ def get_args_for_config(config_name):
   args.control.test_name = '{:s}_on_{:s}'.format(mode, imset)
 
   # Log the arguments
-  logging.error('%s', args)
+  LOGGING.error('%s', args)
   return args

@@ -58,7 +58,7 @@ def adjust_args_for_mode(args, mode):
     args.control.reset_rng_seed = True
     args.control.test_mode = 'test'
   else:
-    logging.fatal('Unknown mode: %s.', mode)
+    LOGGING.fatal('Unknown mode: %s.', mode)
     assert(False)
   return args
 
@@ -90,7 +90,7 @@ def get_solver_vars(solver_str):
   vars = utils.Foo()
   for k, v in zip(ks, vals):
     setattr(vars, k, v)
-  logging.error('solver_vars: %s', vars)
+  LOGGING.error('solver_vars: %s', vars)
   return vars
 
 def process_solver_str(solver_str):
@@ -122,7 +122,7 @@ def process_solver_str(solver_str):
     solver.steps_per_decay = 20000
     solver.max_steps = 60000
   else:
-    logging.fatal('solver_vars.long should be long, long2, nolong or nol.')
+    LOGGING.fatal('solver_vars.long should be long, long2, nolong or nol.')
     assert(False)
 
   clip = solver_vars.clip
@@ -131,7 +131,7 @@ def process_solver_str(solver_str):
   elif clip[:4] == 'clip':
     solver.clip_gradient_norm = float(clip[4:].replace('x', '.'))
   else:
-    logging.fatal('Unknown solver_vars.clip: %s', clip)
+    LOGGING.fatal('Unknown solver_vars.clip: %s', clip)
     assert(False)
 
   typ = solver_vars.typ
@@ -151,10 +151,10 @@ def process_solver_str(solver_str):
     solver.momentum2 = None
     solver.learning_rate_decay = 0.1
   else:
-    logging.fatal('Unknown solver_vars.typ: %s', typ)
+    LOGGING.fatal('Unknown solver_vars.typ: %s', typ)
     assert(False)
 
-  logging.error('solver: %s', solver)
+  LOGGING.error('solver: %s', solver)
   return solver
 
 def get_navtask_vars(navtask_str):
@@ -194,7 +194,7 @@ def get_navtask_vars(navtask_str):
   vars = utils.Foo()
   for k, v in zip(ks, vals):
     setattr(vars, k, v)
-  logging.error('navtask_vars: %s', vals)
+  LOGGING.error('navtask_vars: %s', vals)
   return vars
 
 def process_navtask_str(navtask_str):
@@ -219,7 +219,7 @@ def process_navtask_str(navtask_str):
   elif navtask_vars.data_aug == 'straug':
     navtask.task_params.data_augment.structured = True
   else:
-    logging.fatal('Unknown navtask_vars.data_aug %s.', navtask_vars.data_aug)
+    LOGGING.fatal('Unknown navtask_vars.data_aug %s.', navtask_vars.data_aug)
     assert(False)
 
   navtask.task_params.num_history_frames = int(navtask_vars.history[1:])
@@ -241,7 +241,7 @@ def process_navtask_str(navtask_str):
         len(navtask.task_params.semantic_task.class_map_names)
     navtask.task_params.type = 'to_nearest_obj_acc'
   else:
-    logging.fatal('navtask_vars.task: should be hard or r2r, ST')
+    LOGGING.fatal('navtask_vars.task: should be hard or r2r, ST')
     assert(False)
   
   if navtask_vars.modality == 'rgb':

@@ -154,7 +154,7 @@ def main(_):
         last_checkpoint = slim.evaluation.wait_for_new_checkpoint(checkpoint_dir, last_checkpoint)
         checkpoint_iter = int(os.path.basename(last_checkpoint).split('-')[1])
         start = time.time()
-        logging.info('Starting evaluation at %s using checkpoint %s.', 
+        LOGGING.info('Starting evaluation at %s using checkpoint %s.',
                      time.strftime('%Y-%m-%d-%H:%M:%S', time.localtime()),
                      last_checkpoint)
         

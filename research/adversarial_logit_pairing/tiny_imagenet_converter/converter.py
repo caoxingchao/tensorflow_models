@@ -123,7 +123,7 @@ def read_training_annotations(training_dir):
   sub_dirs = tf.gfile.ListDirectory(training_dir)
   for sub_dir in sub_dirs:
     if not sub_dir.startswith('n'):
-      logging.warning('Found non-class directory in training dir: %s', sub_dir)
+      LOGGING.warning('Found non-class directory in training dir: %s', sub_dir)
       continue
     sub_dir_results = read_tiny_imagenet_annotations(
         os.path.join(training_dir, sub_dir, sub_dir + '_boxes.txt'),

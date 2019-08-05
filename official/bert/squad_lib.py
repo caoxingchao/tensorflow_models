@@ -202,7 +202,7 @@ def read_squad_examples(input_file, is_training, version_2_with_negative):
             cleaned_answer_text = " ".join(
                 tokenization.whitespace_tokenize(orig_answer_text))
             if actual_text.find(cleaned_answer_text) == -1:
-              logging.warning("Could not find answer: '%s' vs. '%s'",
+              LOGGING.warning("Could not find answer: '%s' vs. '%s'",
                               actual_text, cleaned_answer_text)
               continue
           else:
@@ -351,31 +351,31 @@ def convert_examples_to_features(examples,
         end_position = 0
 
       if example_index < 20:
-        logging.info("*** Example ***")
-        logging.info("unique_id: %s", (unique_id))
-        logging.info("example_index: %s", (example_index))
-        logging.info("doc_span_index: %s", (doc_span_index))
-        logging.info("tokens: %s",
+        LOGGING.info("*** Example ***")
+        LOGGING.info("unique_id: %s", (unique_id))
+        LOGGING.info("example_index: %s", (example_index))
+        LOGGING.info("doc_span_index: %s", (doc_span_index))
+        LOGGING.info("tokens: %s",
                      " ".join([tokenization.printable_text(x) for x in tokens]))
-        logging.info(
+        LOGGING.info(
             "token_to_orig_map: %s", " ".join([
                 "%d:%d" % (x, y) for (x, y) in six.iteritems(token_to_orig_map)
             ]))
-        logging.info(
+        LOGGING.info(
             "token_is_max_context: %s", " ".join([
                 "%d:%s" % (x, y)
                 for (x, y) in six.iteritems(token_is_max_context)
             ]))
-        logging.info("input_ids: %s", " ".join([str(x) for x in input_ids]))
-        logging.info("input_mask: %s", " ".join([str(x) for x in input_mask]))
-        logging.info("segment_ids: %s", " ".join([str(x) for x in segment_ids]))
+        LOGGING.info("input_ids: %s", " ".join([str(x) for x in input_ids]))
+        LOGGING.info("input_mask: %s", " ".join([str(x) for x in input_mask]))
+        LOGGING.info("segment_ids: %s", " ".join([str(x) for x in segment_ids]))
         if is_training and example.is_impossible:
-          logging.info("impossible example")
+          LOGGING.info("impossible example")
         if is_training and not example.is_impossible:
           answer_text = " ".join(tokens[start_position:(end_position + 1)])
-          logging.info("start_position: %d", (start_position))
-          logging.info("end_position: %d", (end_position))
-          logging.info("answer: %s", tokenization.printable_text(answer_text))
+          LOGGING.info("start_position: %d", (start_position))
+          LOGGING.info("end_position: %d", (end_position))
+          LOGGING.info("answer: %s", tokenization.printable_text(answer_text))
 
       feature = InputFeatures(
           unique_id=unique_id,
@@ -405,8 +405,8 @@ def convert_examples_to_features(examples,
     num_examples = unique_id - base_id
     if unique_id % batch_size != 0:
       num_padding = batch_size - (num_examples % batch_size)
-    logging.info("Adding padding examples to make sure no partial batch.")
-    logging.info("Adds %d padding examples for inference.", num_padding)
+    LOGGING.info("Adding padding examples to make sure no partial batch.")
+    LOGGING.info("Adds %d padding examples for inference.", num_padding)
     dummy_feature = copy.deepcopy(feature)
     for _ in range(num_padding):
       dummy_feature.unique_id = unique_id
@@ -508,8 +508,8 @@ def write_predictions(all_examples,
                       null_score_diff_threshold=0.0,
                       verbose=False):
   """Write final predictions to the json file and log-odds of null if needed."""
-  logging.info("Writing predictions to: %s", (output_prediction_file))
-  logging.info("Writing nbest to: %s", (output_nbest_file))
+  LOGGING.info("Writing predictions to: %s", (output_prediction_file))
+  LOGGING.info("Writing nbest to: %s", (output_nbest_file))
 
   example_index_to_features = collections.defaultdict(list)
   for feature in all_features:
@@ -742,7 +742,7 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose=False):
   start_position = tok_text.find(pred_text)
   if start_position == -1:
     if verbose:
-      logging.info("Unable to find text: '%s' in '%s'", pred_text, orig_text)
+      LOGGING.info("Unable to find text: '%s' in '%s'", pred_text, orig_text)
     return orig_text
   end_position = start_position + len(pred_text) - 1
 
@@ -751,7 +751,7 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose=False):
 
   if len(orig_ns_text) != len(tok_ns_text):
     if verbose:
-      logging.info("Length not equal after stripping spaces: '%s' vs '%s'",
+      LOGGING.info("Length not equal after stripping spaces: '%s' vs '%s'",
                    orig_ns_text, tok_ns_text)
     return orig_text
 
@@ -769,7 +769,7 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose=False):
 
   if orig_start_position is None:
     if verbose:
-      logging.info("Couldn't map start position")
+      LOGGING.info("Couldn't map start position")
     return orig_text
 
   orig_end_position = None
@@ -780,7 +780,7 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose=False):
 
   if orig_end_position is None:
     if verbose:
-      logging.info("Couldn't map end position")
+      LOGGING.info("Couldn't map end position")
     return orig_text
 
   output_text = orig_text[orig_start_position:(orig_end_position + 1)]

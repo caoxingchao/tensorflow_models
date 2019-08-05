@@ -69,15 +69,15 @@ def count_parameters(also_print=True):
   """
   total = 0
   if also_print:
-    logging.info('Model Parameters:')
+    LOGGING.info('Model Parameters:')
   for v in get_vars_to_restore():
     shape = v.get_shape()
     if also_print:
-      logging.info('%s %s: %s', v.op.name, shape,
+      LOGGING.info('%s %s: %s', v.op.name, shape,
                    format_number(shape.num_elements()))
     total += shape.num_elements()
   if also_print:
-    logging.info('Total: %s', format_number(total))
+    LOGGING.info('Total: %s', format_number(total))
   return total
 
 
@@ -102,7 +102,7 @@ def get_vars_to_restore(ckpt=None):
     ckpt_var_names = [name for (name, unused_shape) in ckpt_var_names]
     for v in model_vars:
       if v.op.name not in ckpt_var_names:
-        logging.warn('Missing var %s in checkpoint: %s', v.op.name,
+        LOGGING.warn('Missing var %s in checkpoint: %s', v.op.name,
                      os.path.basename(ckpt))
     model_vars = [v for v in model_vars if v.op.name in ckpt_var_names]
   return model_vars

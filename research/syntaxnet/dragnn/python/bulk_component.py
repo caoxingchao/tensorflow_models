@@ -16,7 +16,7 @@
 
 
 import tensorflow as tf
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from dragnn.python import component
 from dragnn.python import dragnn_ops
@@ -293,7 +293,7 @@ class BulkFeatureExtractorComponentBuilder(component.ComponentBuilderBase):
       correct: since no gold path is available, 0.
       total: since no gold path is available, 0.
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     stride = state.current_batch_size * self.training_beam_size
     self.network.pre_create(stride)
     with tf.variable_scope(self.name, reuse=True):
@@ -323,7 +323,7 @@ class BulkFeatureExtractorComponentBuilder(component.ComponentBuilderBase):
     Returns:
       setup_op - An op that, when run, guarantees all setup ops will run.
     """
-    logging.info('Building restore hook for component: %s', self.spec.name)
+    LOGGING.info('Building restore hook for component: %s', self.spec.name)
     with tf.variable_scope(self.name):
       if callable(getattr(self.network, 'build_post_restore_hook', None)):
         return [self.network.build_post_restore_hook()]
@@ -347,7 +347,7 @@ class BulkFeatureExtractorComponentBuilder(component.ComponentBuilderBase):
     Returns:
       state handle: final state after advancing
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     if during_training:
       stride = state.current_batch_size * self.training_beam_size
     else:
@@ -444,7 +444,7 @@ class BulkFeatureIdExtractorComponentBuilder(component.ComponentBuilderBase):
     Returns:
       state handle: Final state after advancing.
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
 
     if during_training:
       stride = state.current_batch_size * self.training_beam_size
@@ -491,7 +491,7 @@ class BulkAnnotatorComponentBuilder(component.ComponentBuilderBase):
     Raises:
       RuntimeError: if fixed features are configured.
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     if self.spec.fixed_feature:
       raise RuntimeError(
           'Fixed features are not compatible with bulk annotation. '
@@ -537,7 +537,7 @@ class BulkAnnotatorComponentBuilder(component.ComponentBuilderBase):
     Raises:
       RuntimeError: if fixed features are configured
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     if self.spec.fixed_feature:
       raise RuntimeError(
           'Fixed features are not compatible with bulk annotation. '

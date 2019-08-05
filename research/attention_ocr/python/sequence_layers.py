@@ -295,7 +295,7 @@ class NetSlice(SequenceLayerBase):
     # be unused image features.
     net_slice = self._net[:, char_index:char_index + slice_len, :]
     feature = tf.reshape(net_slice, [batch_size, -1])
-    logging.debug('Image feature: %s', feature)
+    LOGGING.debug('Image feature: %s', feature)
     return feature
 
   def get_eval_input(self, prev, i):
@@ -418,5 +418,5 @@ def get_layer_class(use_attention, use_autoregression):
   else:
     raise AssertionError('Unsupported sequence layer class')
 
-  logging.debug('Use %s as a layer class', layer_class.__name__)
+  LOGGING.debug('Use %s as a layer class', layer_class.__name__)
   return layer_class

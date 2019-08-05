@@ -79,7 +79,7 @@ def get_vars(config_name):
     vars.append('noall')
   if len(vars) == 2: # n_ori
     vars.append('4')
-  logging.error('vars: %s', vars)
+  LOGGING.error('vars: %s', vars)
   return vars
 
 def get_args_for_config(config_name):
@@ -87,7 +87,7 @@ def get_args_for_config(config_name):
   config_name, mode = config_name.split('+')
   vars = get_vars(config_name)
   
-  logging.info('config_name: %s, mode: %s', config_name, mode)
+  LOGGING.info('config_name: %s, mode: %s', config_name, mode)
   
   args.buildinger.task_params.n_ori = int(vars[2])
   args.solver.freeze_conv = True
@@ -98,7 +98,7 @@ def get_args_for_config(config_name):
   if vars[0] == 'v0':
     None
   else:
-    logging.error('config_name: %s undefined', config_name)
+    LOGGING.error('config_name: %s undefined', config_name)
 
   args.buildinger.task_params.height = args.buildinger.camera_param.height
   args.buildinger.task_params.width = args.buildinger.camera_param.width
@@ -110,5 +110,5 @@ def get_args_for_config(config_name):
     args = cc.get_args_for_mode_building(args, mode)
   
   # Log the arguments
-  logging.error('%s', args)
+  LOGGING.error('%s', args)
   return args

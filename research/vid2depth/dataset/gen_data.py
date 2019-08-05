@@ -128,12 +128,12 @@ def _generate_data():
 
   with gfile.Open(os.path.join(FLAGS.data_dir, 'train.txt'), 'w') as train_f:
     with gfile.Open(os.path.join(FLAGS.data_dir, 'val.txt'), 'w') as val_f:
-      logging.info('Generating data...')
+      LOGGING.info('Generating data...')
       for index, frame_chunk in enumerate(frame_chunks):
         all_examples.clear()
         pool.map(_gen_example_star,
                  itertools.izip(frame_chunk, itertools.repeat(all_examples)))
-        logging.info('Chunk %d/%d: saving %s entries...', index + 1, NUM_CHUNKS,
+        LOGGING.info('Chunk %d/%d: saving %s entries...', index + 1, NUM_CHUNKS,
                      len(all_examples))
         for _, example in all_examples.items():
           if example:

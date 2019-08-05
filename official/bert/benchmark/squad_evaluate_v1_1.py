@@ -95,7 +95,7 @@ def evaluate(dataset, predictions):
         total += 1
         if qa["id"] not in predictions:
           message = "Unanswered question " + qa["id"] + " will receive score 0."
-          logging.error(message)
+          LOGGING.error(message)
           continue
         ground_truths = [entry["text"] for entry in qa["answers"]]
         prediction = predictions[qa["id"]]

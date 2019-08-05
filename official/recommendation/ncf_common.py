@@ -117,7 +117,7 @@ def get_distribution_strategy(params):
     # Some of the networking libraries are quite chatty.
     for name in ["googleapiclient.discovery", "googleapiclient.discovery_cache",
                  "oauth2client.transport"]:
-      logging.getLogger(name).setLevel(logging.ERROR)
+      LOGGING.getLogger(name).setLevel(LOGGING.ERROR)
 
     tpu_cluster_resolver = tf.distribute.cluster_resolver.TPUClusterResolver(
         tpu=params["tpu"],
@@ -126,7 +126,7 @@ def get_distribution_strategy(params):
         coordinator_name="coordinator"
     )
 
-    logging.info("Issuing reset command to TPU to ensure a clean state.")
+    LOGGING.info("Issuing reset command to TPU to ensure a clean state.")
     tf.Session.reset(tpu_cluster_resolver.get_master())
 
     # Estimator looks at the master it connects to for MonitoredTrainingSession

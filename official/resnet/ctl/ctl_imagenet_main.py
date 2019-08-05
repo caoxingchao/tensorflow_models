@@ -255,7 +255,7 @@ def run(flags_obj):
         time_callback.on_batch_end(step+epoch*train_steps)
 
       train_loss = total_loss / train_steps
-      logging.info('Training loss: %s, accuracy: %s%% at epoch: %d',
+      LOGGING.info('Training loss: %s, accuracy: %s%% at epoch: %d',
                    train_loss.numpy(),
                    training_accuracy.result().numpy(),
                    epoch)
@@ -269,7 +269,7 @@ def run(flags_obj):
         for _ in range(eval_steps):
           test_step(next(test_iter))
 
-        logging.info('Test loss: %s, accuracy: %s%% at epoch: %d',
+        LOGGING.info('Test loss: %s, accuracy: %s%% at epoch: %d',
                      test_loss.result().numpy(),
                      test_accuracy.result().numpy(),
                      epoch)
@@ -295,7 +295,7 @@ def main(_):
 
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   imagenet_main.define_imagenet_flags()
   ctl_common.define_ctl_flags()
   absl_app.run(main)

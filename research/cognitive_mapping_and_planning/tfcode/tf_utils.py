@@ -330,7 +330,7 @@ def train_step_custom_online_sampling(sess, train_op, global_step,
     v_op_value = [v_op_value[i] for i in ind]
 
     for i in range(len(v)): 
-      logging.info('XXXX: variable: %30s, is_any_nan: %5s, norm: %f.',
+      LOGGING.info('XXXX: variable: %30s, is_any_nan: %5s, norm: %f.',
                    v[i].name, np.any(np.isnan(v_op_value[i])),
                    np.linalg.norm(v_op_value[i]))
 
@@ -435,7 +435,7 @@ def train_step_custom_online_sampling(sess, train_op, global_step,
         total_loss, np_global_step, summary, print_summary = sess.run(
             [train_op, global_step, s_ops.summary_ops, s_ops.print_summary_ops],
             feed_dict=feed_dict)
-        logging.error("")
+        LOGGING.error("")
       else:
         total_loss, np_global_step, summary = sess.run(
             [train_op, global_step, s_ops.summary_ops], feed_dict=feed_dict)
@@ -510,7 +510,7 @@ def train_step_custom_v2(sess, train_op, global_step, train_step_kwargs,
     v_op_value = [v_op_value[i] for i in ind]
 
     for i in range(len(v)): 
-      logging.info('XXXX: variable: %30s, is_any_nan: %5s, norm: %f.',
+      LOGGING.info('XXXX: variable: %30s, is_any_nan: %5s, norm: %f.',
                    v[i].name, np.any(np.isnan(v_op_value[i])),
                    np.linalg.norm(v_op_value[i]))
 
@@ -598,7 +598,7 @@ def train_step_custom(sess, train_op, global_step, train_step_kwargs,
     v = tf.get_collection(tf.GraphKeys.VARIABLES)
     for _ in v: 
       val = sess.run(_.value())
-      logging.info('variable: %30s, is_any_nan: %5s, norm: %f.', _.name,
+      LOGGING.info('variable: %30s, is_any_nan: %5s, norm: %f.', _.name,
                    np.any(np.isnan(val)), np.linalg.norm(val))
 
   for i in range(iters):
@@ -694,7 +694,7 @@ def add_value_to_summary(metric_summary, tag, val, log=True, tag_str=None):
   if log:
     if tag_str is None:
       tag_str = tag + '%f'
-    logging.info(tag_str, val)
+    LOGGING.info(tag_str, val)
 
 def add_scalar_summary_op(tensor, name=None, 
     summary_key='summaries', print_summary_key='print_summaries', prefix=''):

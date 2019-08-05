@@ -104,7 +104,7 @@ def _download_and_clean(dataset, data_dir):
   tf.io.gfile.makedirs(data_subdir)
   if set(expected_files).intersection(
       tf.io.gfile.listdir(data_subdir)) == set(expected_files):
-    logging.info("Dataset {} has already been downloaded".format(dataset))
+    LOGGING.info("Dataset {} has already been downloaded".format(dataset))
     return
 
   url = "{}{}.zip".format(_DATA_URL, dataset)
@@ -117,7 +117,7 @@ def _download_and_clean(dataset, data_dir):
     # A new line to clear the carriage return from download progress
     # logging.info is not applicable here
     print()
-    logging.info(
+    LOGGING.info(
         "Successfully downloaded {} {} bytes".format(
             zip_path, statinfo.st_size))
 
@@ -133,7 +133,7 @@ def _download_and_clean(dataset, data_dir):
         tf.io.gfile.copy(os.path.join(temp_dir, fname),
                          os.path.join(data_subdir, fname))
       else:
-        logging.info("Skipping copy of {}, as it already exists in the "
+        LOGGING.info("Skipping copy of {}, as it already exists in the "
                      "destination folder.".format(fname))
 
   finally:

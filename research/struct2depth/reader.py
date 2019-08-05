@@ -155,7 +155,7 @@ class DataReader(object):
                batch_size=self.batch_size,
                num_threads=1,
                capacity=QUEUE_SIZE + QUEUE_BUFFER * self.batch_size)
-        logging.info('image_stack: %s', util.info(image_stack))
+        LOGGING.info('image_stack: %s', util.info(image_stack))
     return (image_stack, image_stack_norm, seg_stack, intrinsic_mat,
             intrinsic_mat_inv)
 
@@ -288,7 +288,7 @@ class DataReader(object):
 
   def compile_file_list(self, data_dir, split, load_pose=False):
     """Creates a list of input files."""
-    logging.info('data_dir: %s', data_dir)
+    LOGGING.info('data_dir: %s', data_dir)
     with gfile.Open(os.path.join(data_dir, '%s.txt' % split), 'r') as f:
       frames = f.readlines()
       frames = [k.rstrip() for k in frames]

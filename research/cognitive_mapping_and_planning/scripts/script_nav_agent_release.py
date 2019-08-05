@@ -83,7 +83,7 @@ flags.DEFINE_integer('solver_seed', 0, '')
 
 flags.DEFINE_integer('delay_start_iters', 20, '')
 
-logging.basicConfig(level=logging.INFO)
+LOGGING.basicConfig(level=LOGGING.INFO)
 
 def main(_):
   _launcher(FLAGS.config_name, FLAGS.logdir)
@@ -114,7 +114,7 @@ def get_args_for_config(config_name):
     args.setup_train_step_kwargs = vision_baseline_lstm.setup_train_step_kwargs
 
   else:
-    logging.fatal('Unknown type: {:s}'.format(type))
+    LOGGING.fatal('Unknown type: {:s}'.format(type))
   return args
 
 def _setup_args(config_name, logdir):
@@ -153,7 +153,7 @@ def _train(args):
             dagger_sample_bn_false=args.arch.dagger_sample_bn_false)
 
         delay_start = (args.solver.task*(args.solver.task+1))/2 * FLAGS.delay_start_iters
-        logging.error('delaying start for task %d by %d steps.',
+        LOGGING.error('delaying start for task %d by %d steps.',
                       args.solver.task, delay_start)
 
         additional_args = {}
@@ -177,7 +177,7 @@ def _test(args):
   args.solver.master = ''
   container_name = ""
   checkpoint_dir = os.path.join(format(args.logdir))
-  logging.error('Checkpoint_dir: %s', args.logdir)
+  LOGGING.error('Checkpoint_dir: %s', args.logdir)
 
   config = tf.ConfigProto();
   config.device_count['GPU'] = 1;
@@ -218,14 +218,14 @@ def _test(args):
         last_checkpoint = last_checkpoint_
         checkpoint_iter = int(os.path.basename(last_checkpoint).split('-')[1])
 
-        logging.info('Starting evaluation at %s using checkpoint %s.',
+        LOGGING.info('Starting evaluation at %s using checkpoint %s.',
                      time.strftime('%Y-%m-%d-%H:%M:%S', time.localtime()),
                      last_checkpoint)
 
         if (args.control.only_eval_when_done == False or 
             checkpoint_iter >= args.solver.max_steps):
           start = time.time()
-          logging.info('Starting evaluation at %s using checkpoint %s.', 
+          LOGGING.info('Starting evaluation at %s using checkpoint %s.',
                        time.strftime('%Y-%m-%d-%H:%M:%S', time.localtime()),
                        last_checkpoint)
 

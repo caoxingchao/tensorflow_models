@@ -106,9 +106,9 @@ def run_tuner_loop(ns):
   starting_trial_id = (
       num_local_trials * FLAGS.tuner_id + min(remainder, FLAGS.tuner_id))
 
-  logging.info('tuning_space_size: %d', tuning_space_size)
-  logging.info('num_local_trials: %d', num_local_trials)
-  logging.info('starting_trial_id: %d', starting_trial_id)
+  LOGGING.info('tuning_space_size: %d', tuning_space_size)
+  LOGGING.info('num_local_trials: %d', num_local_trials)
+  LOGGING.info('starting_trial_id: %d', starting_trial_id)
 
   for local_trial_index in xrange(num_local_trials):
     trial_config = defaults.default_config_with_updates(FLAGS.config)
@@ -129,19 +129,19 @@ def run_tuner_loop(ns):
 
     objective, metrics = compute_tuning_objective(
         results_list, hparams, trial_name, num_trials=tuning_space_size)
-    logging.info('metrics:\n%s', metrics)
-    logging.info('objective: %s', objective)
-    logging.info('programs_seen_fraction: %s',
+    LOGGING.info('metrics:\n%s', metrics)
+    LOGGING.info('objective: %s', objective)
+    LOGGING.info('programs_seen_fraction: %s',
                  metrics['programs_seen_fraction'])
-    logging.info('success_rate: %s', metrics['success_rate'])
-    logging.info('success_rate_objective_weight: %s',
+    LOGGING.info('success_rate: %s', metrics['success_rate'])
+    LOGGING.info('success_rate_objective_weight: %s',
                  FLAGS.success_rate_objective_weight)
 
     tuning_results_file = os.path.join(trial_dir, 'tuning_results.txt')
     with tf.gfile.FastGFile(tuning_results_file, 'a') as writer:
       writer.write(str(metrics) + '\n')
 
-    logging.info('Trial %s complete.', trial_name)
+    LOGGING.info('Trial %s complete.', trial_name)
 
 
 def compute_tuning_objective(results_list, hparams, trial_name, num_trials):
@@ -235,7 +235,7 @@ def compute_tuning_objective(results_list, hparams, trial_name, num_trials):
 def main(argv):
   del argv
 
-  logging.set_verbosity(FLAGS.log_level)
+  LOGGING.set_verbosity(FLAGS.log_level)
 
   if not FLAGS.logdir:
     raise ValueError('logdir flag must be provided.')

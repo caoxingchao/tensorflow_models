@@ -96,7 +96,7 @@ def _filter_index_sort(raw_rating_path, cache_path):
         valid_cache = False
 
     if not valid_cache:
-      logging.info("Removing stale raw data cache file.")
+      LOGGING.info("Removing stale raw data cache file.")
       tf.io.gfile.remove(cache_path)
 
   if valid_cache:
@@ -114,7 +114,7 @@ def _filter_index_sort(raw_rating_path, cache_path):
     original_items = df[movielens.ITEM_COLUMN].unique()
 
     # Map the ids of user and item to 0 based index for following processing
-    logging.info("Generating user_map and item_map...")
+    LOGGING.info("Generating user_map and item_map...")
     user_map = {user: index for index, user in enumerate(original_users)}
     item_map = {item: index for index, item in enumerate(original_items)}
 
@@ -136,7 +136,7 @@ def _filter_index_sort(raw_rating_path, cache_path):
 
     # This sort is used to shard the dataframe by user, and later to select
     # the last item for a user to be used in validation.
-    logging.info("Sorting by user, timestamp...")
+    LOGGING.info("Sorting by user, timestamp...")
 
     # This sort is equivalent to
     #   df.sort_values([movielens.USER_COLUMN, movielens.TIMESTAMP_COLUMN],
@@ -169,7 +169,7 @@ def _filter_index_sort(raw_rating_path, cache_path):
         "create_time": time.time(),
     }
 
-    logging.info("Writing raw data cache.")
+    LOGGING.info("Writing raw data cache.")
     with tf.io.gfile.GFile(cache_path, "wb") as f:
       pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -191,7 +191,7 @@ def instantiate_pipeline(dataset, data_dir, params, constructor_type=None,
     deterministic: Tell the data constructor to produce deterministically.
     epoch_dir: Directory in which to store the training epochs.
   """
-  logging.info("Beginning data preprocessing.")
+  LOGGING.info("Beginning data preprocessing.")
 
   st = timeit.default_timer()
   raw_rating_path = os.path.join(data_dir, dataset, movielens.RATINGS_FILE)
@@ -229,7 +229,7 @@ def instantiate_pipeline(dataset, data_dir, params, constructor_type=None,
   )
 
   run_time = timeit.default_timer() - st
-  logging.info("Data preprocessing complete. Time: {:.1f} sec."
+  LOGGING.info("Data preprocessing complete. Time: {:.1f} sec."
                .format(run_time))
 
   print(producer)

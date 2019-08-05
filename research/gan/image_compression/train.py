@@ -212,6 +212,6 @@ def _get_gan_model(generator_inputs, generated_data, real_data,
 
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   tf.app.run()
 

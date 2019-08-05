@@ -32,11 +32,11 @@ def _print_debug_ios(history, goal, output):
   if len(shape) != 3:
       raise ValueError('history Tensor must have rank=3')
   if goal is not None:
-     logging.info('goal embedding shape ')
-     logging.info(goal.get_shape().as_list())
+     LOGGING.info('goal embedding shape ')
+     LOGGING.info(goal.get_shape().as_list())
   if output is not None:
-     logging.info('targets shape ')
-     logging.info(output.get_shape().as_list())
+     LOGGING.info('targets shape ')
+     LOGGING.info(output.get_shape().as_list())
 
 
 class Policy(object):

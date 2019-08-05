@@ -62,16 +62,16 @@ class DataProducer(object):
     lidar_cloud_path = os.path.join(FLAGS.test_srcdir,
                                     icp_util.LIDAR_CLOUD_PATH)
     cls.sample_cloud = np.load(lidar_cloud_path)
-    logging.info('sample_cloud: %s', cls.sample_cloud)
+    LOGGING.info('sample_cloud: %s', cls.sample_cloud)
     x_min = np.min(cls.sample_cloud[:, 0])
     x_max = np.max(cls.sample_cloud[:, 0])
     y_min = np.min(cls.sample_cloud[:, 1])
     y_max = np.max(cls.sample_cloud[:, 1])
     z_min = np.min(cls.sample_cloud[:, 2])
     z_max = np.max(cls.sample_cloud[:, 2])
-    logging.info('x: %s - %s', x_min, x_max)
-    logging.info('y: %s - %s', y_min, y_max)
-    logging.info('z: %s - %s', z_min, z_max)
+    LOGGING.info('x: %s - %s', x_min, x_max)
+    LOGGING.info('y: %s - %s', y_min, y_max)
+    LOGGING.info('z: %s - %s', z_min, z_max)
 
   @classmethod
   def random_transform(cls):

@@ -27,7 +27,7 @@ import tensorflow as tf
 
 from tensorflow.python.framework import errors
 from tensorflow.python.platform import gfile
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from google.protobuf import text_format
 
@@ -79,7 +79,7 @@ flags.DEFINE_integer('job_id', 0, 'The trainer will clear checkpoints if the '
 
 
 def main(unused_argv):
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   check.IsTrue(FLAGS.checkpoint_filename)
   check.IsTrue(FLAGS.tensorboard_dir)
   check.IsTrue(FLAGS.resource_path)
@@ -123,7 +123,7 @@ def main(unused_argv):
   # Constructs lexical resources for SyntaxNet in the given resource path, from
   # the training data.
   if FLAGS.compute_lexicon:
-    logging.info('Computing lexicon...')
+    LOGGING.info('Computing lexicon...')
     lexicon.build_lexicon(
         FLAGS.resource_path, training_corpus_path, morph_to_pos=True)
 
@@ -132,7 +132,7 @@ def main(unused_argv):
   with gfile.FastGFile(FLAGS.dragnn_spec, 'r') as fin:
     text_format.Parse(fin.read(), master_spec)
   spec_builder.complete_master_spec(master_spec, None, FLAGS.resource_path)
-  logging.info('Constructed master spec: %s', str(master_spec))
+  LOGGING.info('Constructed master spec: %s', str(master_spec))
   hyperparam_config = spec_pb2.GridPoint()
 
   # Build the TensorFlow graph.
@@ -168,8 +168,8 @@ def main(unused_argv):
       tune_corpus_path, projectivize=False, morph_to_pos=True).corpus()
 
   # Ready to train!
-  logging.info('Training on %d sentences.', len(training_set))
-  logging.info('Tuning on %d sentences.', len(tune_set))
+  LOGGING.info('Training on %d sentences.', len(training_set))
+  LOGGING.info('Tuning on %d sentences.', len(tune_set))
 
   pretrain_steps = [10000, 0]
   tagger_steps = 100000

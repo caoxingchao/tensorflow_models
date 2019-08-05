@@ -24,7 +24,7 @@ import tensorflow as tf
 
 import syntaxnet.load_parser_ops
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 from syntaxnet import sentence_pb2
 from syntaxnet.ops import gen_parser_ops
 
@@ -76,7 +76,7 @@ def to_dict(sentence):
 
 
 def main(unused_argv):
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   with tf.Session() as sess:
     src = gen_parser_ops.document_source(batch_size=32,
                                          corpus_name=FLAGS.corpus_name,
@@ -84,7 +84,7 @@ def main(unused_argv):
     sentence = sentence_pb2.Sentence()
     while True:
       documents, finished = sess.run(src)
-      logging.info('Read %d documents', len(documents))
+      LOGGING.info('Read %d documents', len(documents))
       for d in documents:
         sentence.ParseFromString(d)
         tr = asciitree.LeftAligned()

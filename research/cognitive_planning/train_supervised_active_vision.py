@@ -374,7 +374,7 @@ def unroll_policy_for_eval(
 def init(sequence_length, eval_init_points_file_name, worlds):
   """Initializes the common operations between train and test."""
   modality_types = create_modality_types()
-  logging.info('modality types: %r', modality_types)
+  LOGGING.info('modality types: %r', modality_types)
   # negative reward_goal_range prevents the env from terminating early when the
   # agent is close to the goal. The policy should keep the agent until the end
   # of the 100 steps either through chosing stop action or oscilating around

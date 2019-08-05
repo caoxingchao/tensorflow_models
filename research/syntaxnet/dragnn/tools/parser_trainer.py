@@ -26,7 +26,7 @@ from absl import flags
 import tensorflow as tf
 
 from tensorflow.python.platform import gfile
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from google.protobuf import text_format
 
@@ -64,7 +64,7 @@ flags.DEFINE_integer('report_every', 200,
 
 
 def main(unused_argv):
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
 
   if not gfile.IsDirectory(FLAGS.resource_path):
     gfile.MakeDirs(FLAGS.resource_path)
@@ -72,7 +72,7 @@ def main(unused_argv):
   # Constructs lexical resources for SyntaxNet in the given resource path, from
   # the training data.
   if FLAGS.compute_lexicon:
-    logging.info('Computing lexicon...')
+    LOGGING.info('Computing lexicon...')
     lexicon.build_lexicon(FLAGS.resource_path, FLAGS.training_corpus_path)
 
   # Construct the "lookahead" ComponentSpec. This is a simple right-to-left RNN
@@ -134,7 +134,7 @@ def main(unused_argv):
   master_spec = spec_pb2.MasterSpec()
   master_spec.component.extend([char2word.spec, lookahead.spec,
                                 tagger.spec, parser.spec])
-  logging.info('Constructed master spec: %s', str(master_spec))
+  LOGGING.info('Constructed master spec: %s', str(master_spec))
   hyperparam_config = spec_pb2.GridPoint()
   hyperparam_config.decay_steps = 128000
   hyperparam_config.learning_rate = 0.001
@@ -168,8 +168,8 @@ def main(unused_argv):
       FLAGS.dev_corpus_path, projectivize=False).corpus()
 
   # Ready to train!
-  logging.info('Training on %d sentences.', len(training_set))
-  logging.info('Tuning on %d sentences.', len(dev_set))
+  LOGGING.info('Training on %d sentences.', len(training_set))
+  LOGGING.info('Tuning on %d sentences.', len(dev_set))
 
   pretrain_steps = [100, 0]
   tagger_steps = 1000

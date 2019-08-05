@@ -26,5 +26,5 @@ try:
   icp_op_module = tf.load_op_library('./ops/icp_op.so')
   icp = icp_op_module.icp
 except Exception:  # pylint: disable=broad-except
-  logging.error('Could not load object file for ICP op.')
+  LOGGING.error('Could not load object file for ICP op.')
   icp = None

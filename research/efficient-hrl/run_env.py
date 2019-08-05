@@ -23,7 +23,7 @@ from environments import create_maze_env
 
 app = tf.app
 flags = tf.flags
-logging = tf.logging
+LOGGING = tf.logging
 
 FLAGS = flags.FLAGS
 
@@ -112,16 +112,16 @@ def run_environment(env_name, episode_length, num_episodes):
       successes[-1] = success_fn(reward)
       if done:
         break
-    logging.info('Episode %d reward: %.2f, Success: %d', ep + 1, rewards[-1], successes[-1])
+    LOGGING.info('Episode %d reward: %.2f, Success: %d', ep + 1, rewards[-1], successes[-1])
 
-  logging.info('Average Reward over %d episodes: %.2f',
+  LOGGING.info('Average Reward over %d episodes: %.2f',
                num_episodes, np.mean(rewards))
-  logging.info('Average Success over %d episodes: %.2f',
+  LOGGING.info('Average Success over %d episodes: %.2f',
                num_episodes, np.mean(successes))
 
 
 def main(unused_argv):
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   run_environment(FLAGS.env, FLAGS.episode_length, FLAGS.num_episodes)
 
 

@@ -234,9 +234,9 @@ class OpRegularizerManager(object):
     if op.type in self._op_regularizer_factory_dict:
       regularizer = self._op_regularizer_factory_dict[op.type](op, self)
       if regularizer is None:
-        logging.warning('Failed to create regularizer for %s.', op.name)
+        LOGGING.warning('Failed to create regularizer for %s.', op.name)
       else:
-        logging.info('Created regularizer for %s.', op.name)
+        LOGGING.info('Created regularizer for %s.', op.name)
       return regularizer
     # Unless overridden in op_regularizer_factory_dict, we assume that ops
     # without inputs have no regularizers. These are 'leaf' ops, typically

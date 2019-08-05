@@ -69,7 +69,7 @@ class Shape():
   def __init__(self, obj_file, material_file=None, load_materials=True,
                name_prefix='', name_suffix=''):
     if material_file is not None:
-      logging.error('Ignoring material file input, reading them off obj file.')
+      LOGGING.error('Ignoring material file input, reading them off obj file.')
     load_flags = self.get_pyassimp_load_options()
     scene = assimp.load(obj_file, processing=load_flags)
     filter_ind = self._filter_triangles(scene.meshes)
@@ -88,7 +88,7 @@ class Shape():
             'Texture file {:s} foes not exist.'.format(file_name)
         img_rgb = cv2.imread(file_name)[::-1,:,::-1]
         if img_rgb.shape[0] != img_rgb.shape[1]:
-          logging.warn('Texture image not square.')
+          LOGGING.warn('Texture image not square.')
           sz = np.maximum(img_rgb.shape[0], img_rgb.shape[1])
           sz = int(np.power(2., np.ceil(np.log2(sz))))
           img_rgb = cv2.resize(img_rgb, (sz,sz), interpolation=cv2.INTER_LINEAR)
@@ -96,7 +96,7 @@ class Shape():
           sz = img_rgb.shape[0]
           sz_ = int(np.power(2., np.ceil(np.log2(sz))))
           if sz != sz_:
-            logging.warn('Texture image not square of power of 2 size. ' +
+            LOGGING.warn('Texture image not square of power of 2 size. ' +
                          'Changing size from %d to %d.', sz, sz_)
             sz = sz_
             img_rgb = cv2.resize(img_rgb, (sz,sz), interpolation=cv2.INTER_LINEAR)
@@ -160,7 +160,7 @@ class SwiftshaderRenderer():
     self.init_renderer_egl(width, height)
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if d_shader is not None and rgb_shader is not None:
-      logging.fatal('Does not support setting both rgb_shader and d_shader.')
+      LOGGING.fatal('Does not support setting both rgb_shader and d_shader.')
     
     if d_shader is not None:
       assert rgb_shader is None
@@ -179,13 +179,13 @@ class SwiftshaderRenderer():
 
   def init_renderer_egl(self, width, height):
     major,minor = ctypes.c_long(),ctypes.c_long()
-    logging.info('init_renderer_egl: EGL_DEFAULT_DISPLAY: %s', EGL_DEFAULT_DISPLAY)
+    LOGGING.info('init_renderer_egl: EGL_DEFAULT_DISPLAY: %s', EGL_DEFAULT_DISPLAY)
 
     egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY)
-    logging.info('init_renderer_egl: egl_display: %s', egl_display)
+    LOGGING.info('init_renderer_egl: egl_display: %s', egl_display)
 
     eglInitialize(egl_display, major, minor)
-    logging.info('init_renderer_egl: EGL_OPENGL_API, EGL_OPENGL_ES_API: %s, %s',
+    LOGGING.info('init_renderer_egl: EGL_OPENGL_API, EGL_OPENGL_ES_API: %s, %s',
                  EGL_OPENGL_API, EGL_OPENGL_ES_API)
     eglBindAPI(EGL_OPENGL_ES_API)
 
@@ -194,10 +194,10 @@ class SwiftshaderRenderer():
     local_attributes = [EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8,
                         EGL_DEPTH_SIZE, 16, EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
                         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE,]
-    logging.error('init_renderer_egl: local attributes: %s', local_attributes)
+    LOGGING.error('init_renderer_egl: local attributes: %s', local_attributes)
     local_attributes = arrays.GLintArray.asArray(local_attributes)
     success = eglChooseConfig(egl_display, local_attributes, configs, 1, num_configs)
-    logging.error('init_renderer_egl: eglChooseConfig success, num_configs: %d, %d', success, num_configs.value)
+    LOGGING.error('init_renderer_egl: eglChooseConfig success, num_configs: %d, %d', success, num_configs.value)
     egl_config = configs[0]
 
 
@@ -211,7 +211,7 @@ class SwiftshaderRenderer():
 
 
     eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context)
-    logging.error("init_renderer_egl: egl_display: %s egl_surface: %s, egl_config: %s", egl_display, egl_surface, egl_context)
+    LOGGING.error("init_renderer_egl: egl_display: %s egl_surface: %s, egl_config: %s", egl_display, egl_surface, egl_context)
 
     glViewport(0, 0, width, height);
 

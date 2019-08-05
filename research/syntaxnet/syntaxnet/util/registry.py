@@ -81,7 +81,7 @@ Foo = new.Bar
 import inspect
 import sys
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 
 def _GetClass(name):
@@ -97,7 +97,7 @@ def _GetClass(name):
 
   # Need at least "module.Class".
   if len(elements) < 2:
-    logging.info('Malformed type: "%s"', name)
+    LOGGING.info('Malformed type: "%s"', name)
     return None
   module_path = '.'.join(elements[:-1])
   class_name = elements[-1]
@@ -106,19 +106,19 @@ def _GetClass(name):
   try:
     __import__(module_path)
   except ImportError as e:
-    logging.info('Unable to find module "%s": "%s"', module_path, e)
+    LOGGING.info('Unable to find module "%s": "%s"', module_path, e)
     return None
   module = sys.modules[module_path]
 
   # Look up the class.
   if not hasattr(module, class_name):
-    logging.info('Name "%s" not found in module: "%s"', class_name, module_path)
+    LOGGING.info('Name "%s" not found in module: "%s"', class_name, module_path)
     return None
   class_obj = getattr(module, class_name)
 
   # Check that it is actually a class.
   if not inspect.isclass(class_obj):
-    logging.info('Name does not refer to a class: "%s"', name)
+    LOGGING.info('Name does not refer to a class: "%s"', name)
     return None
   return class_obj
 
@@ -139,7 +139,7 @@ def _Create(baseclass, subclass_name, *args, **kwargs):
   if subclass is None:
     return None  # _GetClass() already logged an error
   if not issubclass(subclass, baseclass):
-    logging.info('Class "%s" is not a subclass of "%s"', subclass_name,
+    LOGGING.info('Class "%s" is not a subclass of "%s"', subclass_name,
                  baseclass.__name__)
     return None
   return subclass(*args, **kwargs)
@@ -177,7 +177,7 @@ def _ResolveAndCreate(baseclass, path, subclass_name, *args, **kwargs):
   elements = path.split('.')
   while True:
     resolved_subclass_name = '.'.join(elements + [subclass_name])
-    logging.info('Attempting to instantiate "%s"', resolved_subclass_name)
+    LOGGING.info('Attempting to instantiate "%s"', resolved_subclass_name)
     subclass = _Create(baseclass, resolved_subclass_name, *args, **kwargs)
     if subclass:
       return subclass  # success

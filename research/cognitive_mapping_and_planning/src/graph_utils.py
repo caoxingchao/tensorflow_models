@@ -452,7 +452,7 @@ def rng_next_goal(start_node_ids, batch_size, gtG, rng, max_dist,
     elif np.any(good3_ids):
       end_node_id = rng.choice(np.where(good3_ids)[0])
     else:
-      logging.error('Did not find any good nodes.')
+      LOGGING.error('Did not find any good nodes.')
 
     # Compute distance to this new goal for doing distance queries.
     dist, pred_map = gt.topology.shortest_distance(
@@ -510,7 +510,7 @@ def rng_room_to_room(batch_size, gtG, rng, max_dist, max_dist_to_compute,
     elif np.any(good3_ids):
       start_node_id = rng.choice(np.where(good3_ids)[0])
     else:
-      logging.error('Did not find any good nodes.')
+      LOGGING.error('Did not find any good nodes.')
 
     start_node_ids.append(start_node_id)
 

@@ -3,7 +3,7 @@ import six
 
 import tensorflow as tf
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 from tensorflow.core.framework import node_def_pb2
 from tensorflow.python.framework import device as pydev
 from tensorflow.python.training import basic_session_run_hooks
@@ -105,7 +105,7 @@ class ExamplesPerSecondHook(session_run_hook.SessionRunHook):
             self._total_steps / self._step_train_time)
         current_examples_per_sec = steps_per_sec * self._batch_size
         # Average examples/sec followed by current examples/sec
-        logging.info('%s: %g (%g), step = %g', 'Average examples/sec',
+        LOGGING.info('%s: %g (%g), step = %g', 'Average examples/sec',
                      average_examples_per_sec, current_examples_per_sec,
                      self._total_steps)
 

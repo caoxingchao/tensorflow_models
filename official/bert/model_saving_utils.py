@@ -47,7 +47,7 @@ def export_bert_model(model_export_path,
   checkpoint = tf.train.Checkpoint(model=model_to_export)
   latest_checkpoint_file = tf.train.latest_checkpoint(checkpoint_dir)
   assert latest_checkpoint_file
-  logging.info('Checkpoint file %s found and restoring from '
+  LOGGING.info('Checkpoint file %s found and restoring from '
                'checkpoint', latest_checkpoint_file)
   checkpoint.restore(latest_checkpoint_file).assert_existing_objects_matched()
   model_to_export.save(
@@ -75,4 +75,4 @@ class BertModelCheckpoint(tf.keras.callbacks.Callback):
     formatted_file_name = self.checkpoint_file_name.format(
         global_step=global_step)
     saved_path = self.checkpoint.save(formatted_file_name)
-    logging.info('Saving model TF checkpoint to : %s', saved_path)
+    LOGGING.info('Saving model TF checkpoint to : %s', saved_path)

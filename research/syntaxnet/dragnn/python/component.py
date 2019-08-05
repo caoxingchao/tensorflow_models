@@ -18,7 +18,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 
 import tensorflow as tf
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from dragnn.protos import export_pb2
 from dragnn.python import dragnn_ops
@@ -366,10 +366,10 @@ class ComponentBuilderBase(object):
       var_params = tf.get_variable(var_name)
 
     if self.moving_average and self.master.read_from_avg:
-      logging.info('Retrieving average for: %s', var_name)
+      LOGGING.info('Retrieving average for: %s', var_name)
       var_params = self.moving_average.average(var_params)
       assert var_params
-    logging.info('Returning: %s', var_params.name)
+    LOGGING.info('Returning: %s', var_params.name)
     return var_params
 
   def advance_counters(self, total):
@@ -416,7 +416,7 @@ class ComponentBuilderBase(object):
     Returns:
       A no-op state.
     """
-    logging.info('Building default post restore hook for component: %s',
+    LOGGING.info('Building default post restore hook for component: %s',
                  self.spec.name)
     return tf.no_op(name='setup_%s' % self.spec.name)
 
@@ -556,7 +556,7 @@ class DynamicComponentBuilder(ComponentBuilderBase):
       the final state after unrolling, the total cost, the total number of
       correctly predicted actions, and the total number of actions.
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     # Add 0 to training_beam_size to disable eager static evaluation.
     # This is possible because tensorflow's constant_value does not
     # propagate arithmetic operations.
@@ -671,7 +671,7 @@ class DynamicComponentBuilder(ComponentBuilderBase):
     Returns:
       Handle to the state once inference is complete for this Component.
     """
-    logging.info('Building component: %s', self.spec.name)
+    LOGGING.info('Building component: %s', self.spec.name)
     if during_training:
       stride = state.current_batch_size * self.training_beam_size
     else:
@@ -788,7 +788,7 @@ class DynamicComponentBuilder(ComponentBuilderBase):
         context_tensor_arrays.append(arrays[index])
 
       if self.spec.attention_component:
-        logging.info('%s component has attention over %s', self.name,
+        LOGGING.info('%s component has attention over %s', self.name,
                      self.spec.attention_component)
         source = self.master.lookup_component[self.spec.attention_component]
         network_state = network_states[self.spec.attention_component]

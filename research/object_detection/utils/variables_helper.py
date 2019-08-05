@@ -71,7 +71,7 @@ def multiply_gradients_matching_regex(grads_and_vars, regex_list, multiplier):
   variables = [pair[1] for pair in grads_and_vars]
   matching_vars = filter_variables(variables, regex_list, invert=True)
   for var in matching_vars:
-    logging.info('Applying multiplier %f to variable [%s]',
+    LOGGING.info('Applying multiplier %f to variable [%s]',
                  multiplier, var.op.name)
   grad_multipliers = {var: float(multiplier) for var in matching_vars}
   return slim.learning.multiply_gradients(grads_and_vars,
@@ -94,7 +94,7 @@ def freeze_gradients_matching_regex(grads_and_vars, regex_list):
   kept_grads_and_vars = [pair for pair in grads_and_vars
                          if pair[1] not in matching_vars]
   for var in matching_vars:
-    logging.info('Freezing variable [%s]', var.op.name)
+    LOGGING.info('Freezing variable [%s]', var.op.name)
   return kept_grads_and_vars
 
 
@@ -141,14 +141,14 @@ def get_variables_available_in_checkpoint(variables,
       if ckpt_vars_to_shape_map[variable_name] == variable.shape.as_list():
         vars_in_ckpt[variable_name] = variable
       else:
-        logging.warning('Variable [%s] is available in checkpoint, but has an '
+        LOGGING.warning('Variable [%s] is available in checkpoint, but has an '
                         'incompatible shape with model variable. Checkpoint '
                         'shape: [%s], model variable shape: [%s]. This '
                         'variable will not be initialized from the checkpoint.',
                         variable_name, ckpt_vars_to_shape_map[variable_name],
                         variable.shape.as_list())
     else:
-      logging.warning('Variable [%s] is not available in checkpoint',
+      LOGGING.warning('Variable [%s] is not available in checkpoint',
                       variable_name)
   if isinstance(variables, list):
     return vars_in_ckpt.values()

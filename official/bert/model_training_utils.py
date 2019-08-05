@@ -39,7 +39,7 @@ def _save_checkpoint(checkpoint, model_dir, checkpoint_prefix):
 
   checkpoint_path = os.path.join(model_dir, checkpoint_prefix)
   saved_path = checkpoint.save(checkpoint_path)
-  logging.info('Saving model as TF checkpoint: %s', saved_path)
+  LOGGING.info('Saving model as TF checkpoint: %s', saved_path)
   return
 
 
@@ -152,7 +152,7 @@ def run_customized_training_loop(
                      '`steps_per_loop` and `steps_per_epoch` are required '
                      'parameters.')
   if steps_per_loop > steps_per_epoch:
-    logging.error(
+    LOGGING.error(
         'steps_per_loop: %d is specified to be greater than '
         ' steps_per_epoch: %d, we will use steps_per_epoch as'
         ' steps_per_loop.', steps_per_loop, steps_per_epoch)
@@ -184,12 +184,12 @@ def run_customized_training_loop(
       optimizer = model.optimizer
 
       if init_checkpoint:
-        logging.info(
+        LOGGING.info(
             'Checkpoint file %s found and restoring from '
             'initial checkpoint for core model.', init_checkpoint)
         checkpoint = tf.train.Checkpoint(model=sub_model)
         checkpoint.restore(init_checkpoint).assert_consumed()
-        logging.info('Loading from checkpoint file completed')
+        LOGGING.info('Loading from checkpoint file completed')
 
       train_loss_metric = tf.keras.metrics.Mean(
           'training_loss', dtype=tf.float32)
@@ -262,7 +262,7 @@ def run_customized_training_loop(
         """Runs validation steps and aggregate metrics."""
         for _ in range(eval_steps):
           test_step(test_iterator)
-        logging.info('Step: [%d] Validation metric = %f', current_training_step,
+        LOGGING.info('Step: [%d] Validation metric = %f', current_training_step,
                      _float_metric_value(eval_metric))
 
       def _run_callbacks_on_batch_begin(batch):
@@ -283,11 +283,11 @@ def run_customized_training_loop(
       checkpoint = tf.train.Checkpoint(model=model, optimizer=optimizer)
       latest_checkpoint_file = tf.train.latest_checkpoint(model_dir)
       if latest_checkpoint_file:
-        logging.info(
+        LOGGING.info(
             'Checkpoint file %s found and restoring from '
             'checkpoint', latest_checkpoint_file)
         checkpoint.restore(latest_checkpoint_file)
-        logging.info('Loading from checkpoint file completed')
+        LOGGING.info('Loading from checkpoint file completed')
 
       current_step = optimizer.iterations.numpy()
       checkpoint_name = 'ctl_step_{step}.ckpt'
@@ -321,7 +321,7 @@ def run_customized_training_loop(
         if train_metric:
           training_status += ' training metric = %s' % _float_metric_value(
               train_metric)
-        logging.info(training_status)
+        LOGGING.info(training_status)
 
         # Saves model checkpoints and run validation steps at every epoch end.
         if current_step % steps_per_epoch == 0:
@@ -332,7 +332,7 @@ def run_customized_training_loop(
                              checkpoint_name.format(step=current_step))
 
           if eval_input_fn:
-            logging.info('Running evaluation after step: %s.', current_step)
+            LOGGING.info('Running evaluation after step: %s.', current_step)
             _run_evaluation(current_step,
                             _get_input_iterator(eval_input_fn, strategy))
             # Re-initialize evaluation metric.
@@ -342,7 +342,7 @@ def run_customized_training_loop(
                        checkpoint_name.format(step=current_step))
 
       if eval_input_fn:
-        logging.info('Running final evaluation after training is complete.')
+        LOGGING.info('Running final evaluation after training is complete.')
         _run_evaluation(current_step,
                         _get_input_iterator(eval_input_fn, strategy))
 
@@ -357,7 +357,7 @@ def run_customized_training_loop(
 
       summary_path = os.path.join(model_dir, SUMMARY_TXT)
       with tf.io.gfile.GFile(summary_path, 'wb') as f:
-        logging.info('Training Summary: \n%s', str(training_summary))
+        LOGGING.info('Training Summary: \n%s', str(training_summary))
         f.write(json.dumps(training_summary, indent=4))
 
       return model

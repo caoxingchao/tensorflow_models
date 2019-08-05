@@ -141,7 +141,7 @@ def resize_maps(map, map_scales, resize_method):
     elif resize_method == 'linear_noantialiasing':
       map_ = cv2.resize(map*1, None, None, fx=sc, fy=sc, interpolation=cv2.INTER_LINEAR)
     else:
-      logging.error('Unknown resizing method')
+      LOGGING.error('Unknown resizing method')
     scaled_maps.append(map_)
   return scaled_maps
 

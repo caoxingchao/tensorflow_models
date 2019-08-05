@@ -50,7 +50,7 @@ RUN_STATUS_RUNNING = "running"
 FLAGS = flags.FLAGS
 
 # Don't use it directly. Use get_benchmark_logger to access a logger.
-_benchmark_logger = None
+_base_logger = None
 _logger_lock = threading.Lock()
 
 
@@ -58,7 +58,7 @@ def config_benchmark_logger(flag_obj=None):
   """Config the global benchmark logger."""
   _logger_lock.acquire()
   try:
-    global _benchmark_logger
+    global _base_logger
     if not flag_obj:
       flag_obj = FLAGS
 
@@ -87,9 +87,9 @@ def config_benchmark_logger(flag_obj=None):
 
 
 def get_benchmark_logger():
-  if not _benchmark_logger:
+  if not _base_logger:
     config_benchmark_logger()
-  return _benchmark_logger
+  return _base_logger
 
 
 @contextlib.contextmanager

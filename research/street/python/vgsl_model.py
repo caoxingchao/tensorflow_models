@@ -27,7 +27,7 @@ import vgsl_input
 import vgslspecs
 import tensorflow.contrib.slim as slim
 from tensorflow.core.framework import summary_pb2
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 
 # Parameters for rate decay.
@@ -106,7 +106,7 @@ def Train(train_dir,
               if sv.coord.should_stop():
                 break
         except tf.errors.AbortedError as e:
-          logging.error('Received error:%s', e)
+          LOGGING.error('Received error:%s', e)
           continue
 
 
@@ -377,8 +377,8 @@ class VGSLImageModel(object):
       self.labels = tf.slice(self.labels, [0, 0], [-1, 1])
       self.labels = tf.reshape(self.labels, [-1])
 
-    logging.info('Final output=%s', outputs)
-    logging.info('Labels tensor=%s', self.labels)
+    LOGGING.info('Final output=%s', outputs)
+    LOGGING.info('Labels tensor=%s', self.labels)
     self.output = outputs
 
   def _AddOutputLayer(self, prev_layer, out_dims, out_func, num_classes):

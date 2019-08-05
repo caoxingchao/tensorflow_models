@@ -25,7 +25,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.ops import nn
 from tensorflow.python.ops import tensor_array_ops as ta
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from dragnn.python import dragnn_ops
 from syntaxnet import syntaxnet_ops
@@ -1397,7 +1397,7 @@ class FeedForwardNetwork(NetworkUnitInterface):
       return self._hidden_layer_sizes[-1]
 
     if not layer_name.startswith('layer_'):
-      logging.fatal('Invalid layer name: "%s" Can only retrieve from "logits", '
+      LOGGING.fatal('Invalid layer name: "%s" Can only retrieve from "logits", '
                     '"last_layer", and "layer_*".', layer_name)
 
     # NOTE(danielandor): Since get_layer_size is called before the
@@ -2131,7 +2131,7 @@ class ConvMultiNetwork(NetworkUnitInterface):
     conv = tf.expand_dims(input_tensor, 1)
     for i in range(len(self._depths) - 1):
       if i == self._side_index:
-        logging.info('Creating side tower at index %d', i)
+        LOGGING.info('Creating side tower at index %d', i)
         side_conv = conv
         for j in range(len(self._side_depths) - 1):
           with tf.variable_scope('side_conv%d' % j, reuse=True) as scope:

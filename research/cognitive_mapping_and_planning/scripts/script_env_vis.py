@@ -57,7 +57,7 @@ def get_args():
   # navtask.task_params.semantic_task.class_map_names = ['chair', 'door', 'table']
   # navtask.task_params.type = 'to_nearest_obj_acc'
 
-  logging.info('navtask: %s', navtask)
+  LOGGING.info('navtask: %s', navtask)
   return navtask
 
 def load_building(dataset_name, building_name):

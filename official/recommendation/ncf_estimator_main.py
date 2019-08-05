@@ -74,7 +74,7 @@ def construct_estimator(model_dir, params):
   if params["use_xla_for_gpu"]:
     # TODO(seemuch): remove the contrib imput
     from tensorflow.contrib.compiler import xla
-    logging.info("Using XLA for GPU for training and evaluation.")
+    LOGGING.info("Using XLA for GPU for training and evaluation.")
     model_fn = xla.estimator_model_fn(model_fn)
   estimator = tf.estimator.Estimator(model_fn=model_fn, model_dir=model_dir,
                                      config=run_config, params=params)
@@ -134,7 +134,7 @@ def run_ncf(_):
   mlperf_helper.ncf_print(key=mlperf_helper.TAGS.TRAIN_LOOP)
   for cycle_index in range(total_training_cycle):
     assert FLAGS.epochs_between_evals == 1 or not mlperf_helper.LOGGER.enabled
-    logging.info("Starting a training cycle: {}/{}".format(
+    LOGGING.info("Starting a training cycle: {}/{}".format(
         cycle_index + 1, total_training_cycle))
 
     mlperf_helper.ncf_print(key=mlperf_helper.TAGS.TRAIN_EPOCH,
@@ -144,13 +144,13 @@ def run_ncf(_):
     estimator.train(input_fn=train_input_fn, hooks=train_hooks,
                     steps=num_train_steps)
 
-    logging.info("Beginning evaluation.")
+    LOGGING.info("Beginning evaluation.")
     eval_input_fn = producer.make_input_fn(is_training=False)
 
     mlperf_helper.ncf_print(key=mlperf_helper.TAGS.EVAL_START,
                             value=cycle_index)
     eval_results = estimator.evaluate(eval_input_fn, steps=num_eval_steps)
-    logging.info("Evaluation complete.")
+    LOGGING.info("Evaluation complete.")
 
     hr = float(eval_results[rconst.HR_KEY])
     ndcg = float(eval_results[rconst.NDCG_KEY])
@@ -170,7 +170,7 @@ def run_ncf(_):
     # Benchmark the evaluation results
     benchmark_logger.log_evaluation_result(eval_results)
     # Log the HR and NDCG results.
-    logging.info(
+    LOGGING.info(
         "Iteration {}: HR = {:.4f}, NDCG = {:.4f}, Loss = {:.4f}".format(
             cycle_index + 1, hr, ndcg, loss))
 
@@ -190,6 +190,6 @@ def run_ncf(_):
 
 
 if __name__ == "__main__":
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   ncf_common.define_ncf_flags()
   absl_app.run(main)

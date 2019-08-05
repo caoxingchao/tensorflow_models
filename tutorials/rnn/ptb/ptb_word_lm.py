@@ -70,7 +70,7 @@ import util
 from tensorflow.python.client import device_lib
 
 flags = tf.flags
-logging = tf.logging
+LOGGING = tf.logging
 
 flags.DEFINE_string(
     "model", "small",

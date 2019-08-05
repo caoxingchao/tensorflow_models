@@ -74,9 +74,9 @@ def default_config():
 
 def default_config_with_updates(config_string, do_logging=True):
   if do_logging:
-    logging.info('Config string: "%s"', config_string)
+    LOGGING.info('Config string: "%s"', config_string)
   config = default_config()
   config.strict_update(config_lib.Config.parse(config_string))
   if do_logging:
-    logging.info('Config:\n%s', config.pretty_str())
+    LOGGING.info('Config:\n%s', config.pretty_str())
   return config

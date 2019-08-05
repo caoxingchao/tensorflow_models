@@ -164,7 +164,7 @@ class CustomEarlyStopping(tf.keras.callbacks.Callback):
     logs = logs or {}
     monitor_value = logs.get(self.monitor)
     if monitor_value is None:
-      logging.warning("Early stopping conditioned on metric `%s` "
+      LOGGING.warning("Early stopping conditioned on metric `%s` "
                       "which is not available. Available metrics are: %s",
                       self.monitor, ",".join(list(logs.keys())))
     return monitor_value
@@ -259,7 +259,7 @@ def run_ncf(_):
 
   # TODO(seemuch): Support different train and eval batch sizes
   if FLAGS.eval_batch_size != FLAGS.batch_size:
-    logging.warning(
+    LOGGING.warning(
         "The Keras implementation of NCF currently does not support batch_size "
         "!= eval_batch_size ({} vs. {}). Overriding eval_batch_size to match "
         "batch_size".format(FLAGS.eval_batch_size, FLAGS.batch_size)
@@ -275,7 +275,7 @@ def run_ncf(_):
 
   if (params["keras_use_ctl"] and (
       not keras_utils.is_v2_0() or strategy is None)):
-    logging.error(
+    LOGGING.error(
         "Custom training loop only works with tensorflow 2.0 and dist strat.")
     return
 
@@ -381,8 +381,8 @@ def run_ncf(_):
         train_loss += train_step()
         time_callback.on_batch_end(step+epoch*num_train_steps)
       train_loss /= num_train_steps
-      logging.info("Done training epoch %s, epoch loss=%s.",
-                   epoch+1, train_loss)
+      LOGGING.info("Done training epoch %s, epoch loss=%s.",
+                   epoch + 1, train_loss)
       eval_input_iterator.initialize()
       hr_sum = 0
       hr_count = 0
@@ -390,7 +390,7 @@ def run_ncf(_):
         step_hr_sum, step_hr_count = eval_step()
         hr_sum += step_hr_sum
         hr_count += step_hr_count
-      logging.info("Done eval epoch %s, hr=%s.", epoch+1, hr_sum/hr_count)
+      LOGGING.info("Done eval epoch %s, hr=%s.", epoch + 1, hr_sum / hr_count)
 
       if (FLAGS.early_stopping and
           float(hr_sum/hr_count) > params["hr_threshold"]):
@@ -412,14 +412,14 @@ def run_ncf(_):
                                 validation_steps=num_eval_steps,
                                 verbose=2)
 
-      logging.info("Training done. Start evaluating")
+      LOGGING.info("Training done. Start evaluating")
 
       eval_results = keras_model.evaluate(
           eval_input_dataset,
           steps=num_eval_steps,
           verbose=2)
 
-      logging.info("Keras evaluation is done.")
+      LOGGING.info("Keras evaluation is done.")
 
     if history and history.history:
       train_history = history.history

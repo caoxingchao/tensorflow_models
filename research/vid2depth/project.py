@@ -301,5 +301,5 @@ def get_cloud(depth, intrinsics_inv, name=None):  # pylint: disable=unused-argum
     cam_coords = _pixel2cam(depth, grid, intrinsics_inv)
     cam_coords = tf.transpose(cam_coords, [0, 2, 1])
     cam_coords = tf.reshape(cam_coords, [batch_size, img_height, img_width, 3])
-    logging.info('depth -> cloud: %s', cam_coords)
+    LOGGING.info('depth -> cloud: %s', cam_coords)
     return cam_coords

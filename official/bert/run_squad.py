@@ -142,7 +142,7 @@ def predict_squad_customized(strategy, input_meta_data, bert_config,
           bert_config, input_meta_data['max_seq_length'], float_type=tf.float32)
 
     checkpoint_path = tf.train.latest_checkpoint(FLAGS.model_dir)
-    logging.info('Restoring checkpoints from %s', checkpoint_path)
+    LOGGING.info('Restoring checkpoints from %s', checkpoint_path)
     checkpoint = tf.train.Checkpoint(model=squad_model)
     checkpoint.restore(checkpoint_path)
 
@@ -169,7 +169,7 @@ def predict_squad_customized(strategy, input_meta_data, bert_config,
       for result in get_raw_results(predictions):
         all_results.append(result)
       if len(all_results) % 100 == 0:
-        logging.info('Made predictions for %d records.', len(all_results))
+        LOGGING.info('Made predictions for %d records.', len(all_results))
     return all_results
 
 
@@ -178,7 +178,7 @@ def train_squad(strategy, input_meta_data, custom_callbacks=None):
   if not strategy:
     raise ValueError('Distribution strategy cannot be None.')
 
-  logging.info('Training using customized training loop with distribution'
+  LOGGING.info('Training using customized training loop with distribution'
                ' strategy.')
 
   bert_config = modeling.BertConfig.from_json_file(FLAGS.bert_config_file)
@@ -263,10 +263,10 @@ def predict_squad(strategy, input_meta_data):
       batch_size=FLAGS.predict_batch_size)
   eval_writer.close()
 
-  logging.info('***** Running predictions *****')
-  logging.info('  Num orig examples = %d', len(eval_examples))
-  logging.info('  Num split examples = %d', len(eval_features))
-  logging.info('  Batch size = %d', FLAGS.predict_batch_size)
+  LOGGING.info('***** Running predictions *****')
+  LOGGING.info('  Num orig examples = %d', len(eval_examples))
+  LOGGING.info('  Num split examples = %d', len(eval_features))
+  LOGGING.info('  Batch size = %d', FLAGS.predict_batch_size)
 
   num_steps = int(dataset_size / FLAGS.predict_batch_size)
   all_results = predict_squad_customized(strategy, input_meta_data, bert_config,

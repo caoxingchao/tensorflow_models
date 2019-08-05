@@ -147,5 +147,5 @@ def main(_):
       get_hooks_fn=tfgan.get_joint_train_hooks())
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.INFO)
+  LOGGING.set_verbosity(LOGGING.INFO)
   tf.app.run()

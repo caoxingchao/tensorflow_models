@@ -20,7 +20,7 @@ import tensorflow as tf
 
 from tensorflow.python.framework import test_util
 from tensorflow.python.platform import googletest
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from dragnn.python import composite_optimizer
 
@@ -119,7 +119,7 @@ class CompositeOptimizerTest(test_util.TensorFlowTestCase):
         self.assertEqual(adam_counter, min(iteration + 1, 100))
         self.assertEqual(momentum_counter, max(iteration - 99, 0))
         if iteration % 20 == 0:
-          logging.info("%d %s %d %d", iteration,
+          LOGGING.info("%d %s %d %d", iteration,
                        sess.run([switch, step, w, b]), adam_counter,
                        momentum_counter)
 

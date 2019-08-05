@@ -18,7 +18,7 @@ import collections
 import tensorflow as tf
 
 from tensorflow.core.protobuf import saver_pb2
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from dragnn.protos import spec_pb2
 from dragnn.python import component
@@ -29,7 +29,7 @@ from syntaxnet.util import check
 try:
   tf.NotDifferentiable('ExtractFixedFeatures')
 except KeyError, e:
-  logging.info(str(e))
+  LOGGING.info(str(e))
 
 
 def _validate_grid_point(hyperparams, is_sub_optimizer=False):
@@ -136,12 +136,12 @@ def _create_optimizer(hyperparams, learning_rate_var, step_var=None):
     optimizer1 = _create_optimizer(spec.method1, learning_rate_var, step_var)
     optimizer2 = _create_optimizer(spec.method2, learning_rate_var, step_var)
     if step_var is None:
-      logging.fatal('step_var is required for CompositeOptimizer')
+      LOGGING.fatal('step_var is required for CompositeOptimizer')
     switch = tf.less(step_var, spec.switch_after_steps)
     return composite_optimizer.CompositeOptimizer(
         optimizer1, optimizer2, switch, use_locking=True)
   else:
-    logging.fatal('Unknown learning method (optimizer)')
+    LOGGING.fatal('Unknown learning method (optimizer)')
 
 
 class MasterBuilder(object):
@@ -408,9 +408,9 @@ class MasterBuilder(object):
 
     unroll_using_oracle = unroll_using_oracle[:max_index]
 
-    logging.info('Creating training target:')
-    logging.info('\tWeights: %s', component_weights)
-    logging.info('\tOracle: %s', unroll_using_oracle)
+    LOGGING.info('Creating training target:')
+    LOGGING.info('\tWeights: %s', component_weights)
+    LOGGING.info('\tOracle: %s', unroll_using_oracle)
 
     metrics_list = []
     cost = tf.constant(0.)
@@ -424,7 +424,7 @@ class MasterBuilder(object):
       comp = self.components[component_index]
       network_states[comp.name] = component.NetworkState()
 
-      logging.info('Initializing data for component "%s"', comp.name)
+      LOGGING.info('Initializing data for component "%s"', comp.name)
       handle = dragnn_ops.init_component_data(
           handle, beam_size=comp.training_beam_size, component=comp.name)
       # TODO(googleuser): Phase out component.MasterState.
@@ -474,7 +474,7 @@ class MasterBuilder(object):
     # 3. make the ComputeSession handle depend on the optimizer.
     gradient_norm = tf.constant(0.)
     if compute_gradients:
-      logging.info('Creating train op with %d variables:\n\t%s',
+      LOGGING.info('Creating train op with %d variables:\n\t%s',
                    len(params_to_train),
                    '\n\t'.join([x.name for x in params_to_train]))
 
@@ -524,7 +524,7 @@ class MasterBuilder(object):
       Optionally clipped gradient.
     """
     if grad is not None and self.hyperparams.gradient_clip_norm > 0:
-      logging.info('Clipping gradient %s', grad)
+      LOGGING.info('Clipping gradient %s', grad)
       if isinstance(grad, tf.IndexedSlices):
         tmp = tf.clip_by_norm(grad.values, self.hyperparams.gradient_clip_norm)
         return tf.IndexedSlices(tmp, grad.indices, grad.dense_shape)
@@ -628,7 +628,7 @@ class MasterBuilder(object):
     Returns:
       Dictionary of training targets.
     """
-    logging.info('Creating new training target '
+    LOGGING.info('Creating new training target '
                  '%s'
                  ' from config: %s', target_config.name, str(target_config))
     scope_id = prefix + target_config.name
@@ -713,7 +713,7 @@ class MasterBuilder(object):
 
   def add_saver(self):
     """Adds a Saver for all variables in the graph."""
-    logging.info('Generating op to save variables:\n\t%s',
+    LOGGING.info('Generating op to save variables:\n\t%s',
                  '\n\t'.join([x.name for x in tf.global_variables()]))
     self.saver = tf.train.Saver(
         var_list=[x for x in tf.global_variables()],

@@ -20,7 +20,7 @@ import os.path
 import numpy as np
 import tensorflow as tf
 
-from tensorflow.python.platform import tf_logging as logging
+from tensorflow.python.platform import tf_logging as LOGGING
 
 from syntaxnet import dictionary_pb2
 from syntaxnet import graph_builder
@@ -113,7 +113,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
           break
 
     # Assert that the two runs made the exact same number of steps.
-    logging.info('Number of steps in the two runs: %d, %d',
+    LOGGING.info('Number of steps in the two runs: %d, %d',
                  num_steps_a, num_steps_b)
     self.assertEqual(num_steps_a, num_steps_b)
 
@@ -156,7 +156,7 @@ class ParsingReaderOpsTest(tf.test.TestCase):
           tf.while_loop(Condition, Body, loop_vars,
                         shape_invariants=[tf.TensorShape(None)] * 2,
                         parallel_iterations=1))
-      logging.info('Result: %s', res)
+      LOGGING.info('Result: %s', res)
       self.assertEqual(res[0], 2)
 
   def _token_embedding(self, token, embedding):

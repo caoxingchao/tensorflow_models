@@ -24,8 +24,8 @@ import model
 
 FLAGS = flags.FLAGS
 
-logging.basicConfig(
-    level=logging.DEBUG,
+LOGGING.basicConfig(
+    level=LOGGING.DEBUG,
     stream=sys.stderr,
     format='%(levelname)s '
     '%(asctime)s.%(msecs)06d: '
